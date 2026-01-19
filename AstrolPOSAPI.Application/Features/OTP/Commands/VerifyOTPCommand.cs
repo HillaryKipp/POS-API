@@ -1,5 +1,8 @@
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AstrolPOSAPI.Application.Features.OTP.Commands
 {
@@ -21,28 +24,37 @@ namespace AstrolPOSAPI.Application.Features.OTP.Commands
 
         public async Task<bool> Handle(VerifyOTPCommand request, CancellationToken cancellationToken)
         {
-            var allOTPs = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.OTP>().GetAllAsync();
-
-            var otp = allOTPs
-                .Where(o => o.PhoneNumber == request.PhoneNumber
-                    && o.OTPCode == request.OTPCode
-                    && o.Purpose == request.Purpose
-                    && !o.IsVerified)
+            var repo = _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.OTP>();
+            var otp = await repo.Entities
+                .Where(o => o.PhoneNumber == request.PhoneNumber && o.Purpose == request.Purpose && !o.IsVerified)
                 .OrderByDescending(o => o.CreatedAt)
-                .FirstOrDefault();
+                .FirstOrDefaultAsync(cancellationToken);
 
             if (otp == null)
                 return false;
 
-            // Check if expired
+            const int maxAttempts = 5;
+            if (otp.VerificationAttempts >= maxAttempts)
+                return false;
+
             if (DateTime.UtcNow > otp.ExpiresAt)
                 return false;
 
-            // Mark as verified
+            var storedBytes = Encoding.UTF8.GetBytes(otp.OTPCode ?? string.Empty);
+            var providedBytes = Encoding.UTF8.GetBytes(request.OTPCode ?? string.Empty);
+            bool codesMatch = CryptographicOperations.FixedTimeEquals(storedBytes, providedBytes);
+
+            if (!codesMatch)
+            {
+                otp.VerificationAttempts++;
+                await repo.UpdateAsync(otp);
+                await _unitOfWork.Save(cancellationToken);
+                return false;
+            }
+
             otp.IsVerified = true;
             otp.VerifiedAt = DateTime.UtcNow;
-
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.OTP>().UpdateAsync(otp);
+            await repo.UpdateAsync(otp);
             await _unitOfWork.Save(cancellationToken);
 
             return true;
