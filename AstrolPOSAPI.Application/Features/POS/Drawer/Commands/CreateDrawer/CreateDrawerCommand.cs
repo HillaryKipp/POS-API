@@ -1,0 +1,51 @@
+using AstrolPOSAPI.Application.Features.POS.Drawer.DTOs;
+using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AtsrolPOSAPI.Domain.Entities.POS;
+using AutoMapper;
+using FluentValidation;
+using MediatR;
+
+namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.CreateDrawer
+{
+    public class CreateDrawerCommand : IRequest<DrawerDto>
+    {
+        public string DrawerGroupId { get; set; } = default!;
+        public string? DefaultScreenId { get; set; }
+        public string TerminalId { get; set; } = default!;
+        public DrawerStatus Status { get; set; }
+        public string CompanyId { get; set; } = default!;
+        public string StoreOfOperationId { get; set; } = default!;
+    }
+
+    public class CreateDrawerCommandValidator : AbstractValidator<CreateDrawerCommand>
+    {
+        public CreateDrawerCommandValidator()
+        {
+            RuleFor(p => p.DrawerGroupId).NotEmpty();
+            RuleFor(p => p.TerminalId).NotEmpty();
+            RuleFor(p => p.CompanyId).NotEmpty();
+            RuleFor(p => p.StoreOfOperationId).NotEmpty();
+            RuleFor(p => p.Status).IsInEnum();
+        }
+    }
+
+    public class CreateDrawerCommandHandler : IRequestHandler<CreateDrawerCommand, DrawerDto>
+    {
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+
+        public CreateDrawerCommandHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        {
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<DrawerDto> Handle(CreateDrawerCommand request, CancellationToken cancellationToken)
+        {
+            var drawer = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.Drawer>(request);
+            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().AddAsync(drawer);
+            await _unitOfWork.Save(cancellationToken);
+            return _mapper.Map<DrawerDto>(drawer);
+        }
+    }
+}
