@@ -24,8 +24,12 @@ namespace AstrolPOSAPI.Application.Features.OTP.Commands
 
         public async Task<OTPDto> Handle(SendOTPCommand request, CancellationToken cancellationToken)
         {
-            // Generate 6-digit OTP
-            var otpCode = new Random().Next(100000, 999999).ToString();
+            // Generate 6-digit OTP using a cryptographically secure RNG
+            using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
+            Span<byte> bytes = stackalloc byte[4];
+            rng.GetBytes(bytes);
+            var value = BitConverter.ToUInt32(bytes);
+            var otpCode = (value % 900000 + 100000).ToString();
 
             var otp = new AtsrolPOSAPI.Domain.Entities.Identity.OTP
             {
@@ -41,9 +45,8 @@ namespace AstrolPOSAPI.Application.Features.OTP.Commands
             await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.OTP>().AddAsync(otp);
             await _unitOfWork.Save(cancellationToken);
 
-            // TODO: In production, send SMS here using SMS service
-            // For now, we'll just log it
-            Console.WriteLine($"[OTP] Code for {request.PhoneNumber}: {otpCode} (Purpose: {request.Purpose})");
+            // TODO: Integrate with an SMS/Email provider to deliver the OTP securely.
+            // Do not log OTP codes. Consider logging only metadata (e.g., phone hash, purpose) without the OTP value.
 
             return _mapper.Map<OTPDto>(otp);
         }

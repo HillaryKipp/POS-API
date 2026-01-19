@@ -43,8 +43,14 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.CreateGener
                 SecondaryColor = request.SecondaryColor ?? "#6c757d",
                 TertiaryColor = request.TertiaryColor ?? "#28a745",
                 HasOtp = request.HasOtp,
-                Currency = request.Currency ?? "ksh",
-                CurrencySymbol = request.Currency == "KES" ? "KES" : request.Currency,
+                Currency = (request.Currency ?? "KES").ToUpperInvariant(),
+                CurrencySymbol = ((request.Currency ?? "KES").ToUpperInvariant()) switch
+                {
+                    "KES" => "KES",
+                    "USD" => "$",
+                    "EUR" => "€",
+                    _ => (request.Currency ?? "KES").ToUpperInvariant()
+                },
                 Timezone = request.Timezone ?? "UTC",
                 EnableInventory = true,
                 EnablePOS = true,

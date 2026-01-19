@@ -53,29 +53,31 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.UpdateGener
                 throw new KeyNotFoundException($"GeneralSettings with ID {request.Id} not found");
 
             // Update properties
-            settings.LogoUrl = request.LogoUrl;
-            settings.CompanyName = request.CompanyName;
-            settings.CompanySlogan = request.CompanySlogan;
-            settings.PrimaryColor = request.PrimaryColor;
-            settings.SecondaryColor = request.SecondaryColor;
-            settings.TertiaryColor = request.TertiaryColor;
-            settings.AccentColor = request.AccentColor;
-            settings.BackgroundColor = request.BackgroundColor;
-            settings.BackgroundImageUrl = request.BackgroundImageUrl;
+            settings.LogoUrl = request.LogoUrl ?? settings.LogoUrl;
+            settings.CompanyName = request.CompanyName ?? settings.CompanyName;
+            settings.CompanySlogan = request.CompanySlogan ?? settings.CompanySlogan;
+            settings.PrimaryColor = request.PrimaryColor ?? settings.PrimaryColor;
+            settings.SecondaryColor = request.SecondaryColor ?? settings.SecondaryColor;
+            settings.TertiaryColor = request.TertiaryColor ?? settings.TertiaryColor;
+            settings.AccentColor = request.AccentColor ?? settings.AccentColor;
+            settings.BackgroundColor = request.BackgroundColor ?? settings.BackgroundColor;
+            settings.BackgroundImageUrl = request.BackgroundImageUrl ?? settings.BackgroundImageUrl;
             settings.HasOtp = request.HasOtp;
             settings.EnableInventory = request.EnableInventory;
             settings.EnablePOS = request.EnablePOS;
             settings.EnableReporting = request.EnableReporting;
-            settings.Currency = request.Currency;
-            settings.CurrencySymbol = request.CurrencySymbol;
-            settings.DateFormat = request.DateFormat;
-            settings.TimeFormat = request.TimeFormat;
-            settings.Timezone = request.Timezone;
-            settings.TaxNumber = request.TaxNumber;
-            settings.DefaultTaxRate = request.DefaultTaxRate;
-            settings.ReceiptFooter = request.ReceiptFooter;
-            settings.SupportEmail = request.SupportEmail;
-            settings.SupportPhone = request.SupportPhone;
+            settings.Currency = (request.Currency ?? settings.Currency)?.ToUpperInvariant();
+            settings.CurrencySymbol = string.IsNullOrWhiteSpace(request.CurrencySymbol)
+                ? settings.CurrencySymbol
+                : request.CurrencySymbol;
+            settings.DateFormat = request.DateFormat ?? settings.DateFormat;
+            settings.TimeFormat = request.TimeFormat ?? settings.TimeFormat;
+            settings.Timezone = request.Timezone ?? settings.Timezone;
+            settings.TaxNumber = request.TaxNumber ?? settings.TaxNumber;
+            settings.DefaultTaxRate = request.DefaultTaxRate ?? settings.DefaultTaxRate;
+            settings.ReceiptFooter = request.ReceiptFooter ?? settings.ReceiptFooter;
+            settings.SupportEmail = request.SupportEmail ?? settings.SupportEmail;
+            settings.SupportPhone = request.SupportPhone ?? settings.SupportPhone;
 
             await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>().UpdateAsync(settings);
             await _unitOfWork.Save(cancellationToken);
