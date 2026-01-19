@@ -4,6 +4,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 	<WarningLevel>4</WarningLevel>
+    <LangVersion>13.0</LangVersion>
   </PropertyGroup>
 
 
