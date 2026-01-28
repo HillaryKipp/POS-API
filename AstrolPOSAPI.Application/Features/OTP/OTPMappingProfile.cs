@@ -7,7 +7,7 @@ namespace AstrolPOSAPI.Application.Features.OTP
     {
         public OTPMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.Identity.OTP, OTPDto>();
+            CreateMap<Domain.Entities.Identity.OTP, OTPDto>();
         }
     }
 }

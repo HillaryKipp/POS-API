@@ -1,11 +1,11 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using AtsrolPOSAPI.Domain.Common;
-using AtsrolPOSAPI.Domain.Entities.Audit;
-using AtsrolPOSAPI.Domain.Entities.Core;
-using AtsrolPOSAPI.Domain.Entities.Identity;
-using AtsrolPOSAPI.Domain.Entities.POS;
+using AstrolPOSAPI.Domain.Common;
+using AstrolPOSAPI.Domain.Entities.Audit;
+using AstrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.POS;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -31,9 +31,9 @@ namespace AstrolPOSAPI.Persistence.Contexts
         // Identity/Auth related
 
         public DbSet<Permission> Permissions => Set<Permission>();
-        public DbSet<OTP> OTPs => Set<OTP>();
-        public DbSet<AtsrolPOSAPI.Domain.Entities.Identity.UserStore> UserStores => Set<AtsrolPOSAPI.Domain.Entities.Identity.UserStore>();
-        public DbSet<GeneralSettings> GeneralSettings => Set<GeneralSettings>();
+        public DbSet<Domain.Entities.Identity.OTP> OTPs => Set<Domain.Entities.Identity.OTP>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Identity.UserStore> UserStores => Set<AstrolPOSAPI.Domain.Entities.Identity.UserStore>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Core.GeneralSettings> GeneralSettings => Set<AstrolPOSAPI.Domain.Entities.Core.GeneralSettings>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,12 +43,14 @@ namespace AstrolPOSAPI.Persistence.Contexts
             {
                 e.Property(p => p.Code).IsRequired().HasMaxLength(32);
                 e.Property(p => p.Name).IsRequired().HasMaxLength(256);
+                e.HasIndex(p => p.Code).IsUnique();
             });
 
             builder.Entity<StoreType>(e =>
             {
                 e.Property(p => p.Code).IsRequired().HasMaxLength(32);
                 e.Property(p => p.Description).IsRequired().HasMaxLength(256);
+                e.HasIndex(p => p.Code).IsUnique();
             });
 
             builder.Entity<NoSeries>(e =>
@@ -60,6 +62,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
             builder.Entity<DrawerGroup>(e =>
             {
                 e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Name).IsRequired().HasMaxLength(128);
                 e.Property(p => p.Description).IsRequired().HasMaxLength(128);
                 e.Property(p => p.CompanyId).IsRequired();
                 e.Property(p => p.StoreOfOperationId).IsRequired();
@@ -273,7 +276,6 @@ namespace AstrolPOSAPI.Persistence.Contexts
                 e.Property(p => p.EmpNo).HasMaxLength(32);
                 e.Property(p => p.Name).HasMaxLength(256);
                 e.Property(p => p.NationalID).HasMaxLength(64);
-                e.Property(p => p.CompanyId).IsRequired();
 
                 // Relationships
 
@@ -295,7 +297,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
             });
 
             // UserStore (junction table for many-to-many User-Store relationship)
-            builder.Entity<AtsrolPOSAPI.Domain.Entities.Identity.UserStore>(e =>
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Identity.UserStore>(e =>
             {
                 // Composite primary key
                 e.HasKey(us => new { us.UserId, us.StoreId });
@@ -344,6 +346,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
                 // Indexes
 
                 e.HasIndex(s => s.CompanyId);
+                e.HasIndex(s => s.Code);
             });
 
             // Permission entity configuration
@@ -376,7 +379,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
 
             // OTP entity configuration
 
-            builder.Entity<OTP>(e =>
+            builder.Entity<Domain.Entities.Identity.OTP>(e =>
             {
                 e.Property(p => p.PhoneNumber).IsRequired().HasMaxLength(20);
                 e.Property(p => p.OTPCode).IsRequired().HasMaxLength(10);
@@ -395,7 +398,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
             });
 
             // GeneralSettings entity configuration
-            builder.Entity<GeneralSettings>(e =>
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Core.GeneralSettings>(e =>
             {
                 e.Property(p => p.CompanyId).IsRequired();
                 e.Property(p => p.LogoUrl).HasMaxLength(512);
@@ -426,11 +429,11 @@ namespace AstrolPOSAPI.Persistence.Contexts
                 // One-to-one relationship with Company
                 e.HasOne(gs => gs.Company)
                     .WithOne()
-                    .HasForeignKey<GeneralSettings>(gs => gs.CompanyId)
+                    .HasForeignKey<AstrolPOSAPI.Domain.Entities.Core.GeneralSettings>(gs => gs.CompanyId)
                     .OnDelete(DeleteBehavior.Cascade);
 
                 // Query filter for soft deletes
-                e.HasQueryFilter(gs => gs.DeletedDate == null);
+                e.HasQueryFilter((AstrolPOSAPI.Domain.Entities.Core.GeneralSettings gs) => gs.DeletedDate == null);
 
                 // Index on CompanyId for quick lookups
                 e.HasIndex(gs => gs.CompanyId).IsUnique();

@@ -31,11 +31,11 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.CreateGener
         public async Task<GeneralSettingsDto> Handle(CreateGeneralSettingsCommand request, CancellationToken cancellationToken)
         {
             // Validate Company exists
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
+            var company = await _unitOfWork.Repository<Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
             if (company == null)
                 throw new InvalidOperationException($"Company with ID {request.CompanyId} not found");
 
-            var settings = new AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings
+            var settings = new Domain.Entities.Core.GeneralSettings
             {
                 CompanyId = request.CompanyId,
                 LogoUrl = request.LogoUrl,
@@ -57,7 +57,7 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.CreateGener
                 EnableReporting = true
             };
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>().AddAsync(settings);
+            await _unitOfWork.Repository<Domain.Entities.Core.GeneralSettings>().AddAsync(settings);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<GeneralSettingsDto>(settings);

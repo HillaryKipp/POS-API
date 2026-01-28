@@ -1,4 +1,4 @@
-using AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs;
+using AstrolPOSAPI.Application.Features.POS.TouchScreenButton.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
@@ -25,7 +25,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreenButton.Queries
 
         public async Task<List<TouchScreenButtonDto>> Handle(GetAllTouchScreenButtonsQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>().GetAllAsync();
+            var items = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>().GetAllAsync();
             var query = items.AsQueryable();
 
             if (!string.IsNullOrEmpty(request.TouchScreenId))

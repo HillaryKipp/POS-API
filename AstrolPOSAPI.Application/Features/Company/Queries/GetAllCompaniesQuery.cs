@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Queries
 
         public async Task<List<CompanyDto>> Handle(GetAllCompaniesQuery request, CancellationToken cancellationToken)
         {
-            var companies = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>()
+            var companies = await _unitOfWork.Repository<Domain.Entities.Core.Company>()
                 .Entities
                 .Where(c => c.DeletedDate == null)
                 .OrderBy(c => c.Code)

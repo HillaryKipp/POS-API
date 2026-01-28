@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -22,6 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\AstrolPOSAPI.Application\AstrolPOSAPI.Application.csproj" />
-    <ProjectReference Include="..\AtsrolPOSAPI.Domain\AtsrolPOSAPI.Domain.csproj" />
+    <ProjectReference Include="..\AstrolPOSAPI.Domain\AstrolPOSAPI.Domain.csproj" />
   </ItemGroup>
 </Project>

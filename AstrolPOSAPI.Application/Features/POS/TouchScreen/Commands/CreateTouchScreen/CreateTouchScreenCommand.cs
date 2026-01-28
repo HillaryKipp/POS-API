@@ -44,8 +44,8 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.CreateTouch
 
         public async Task<TouchScreenDto> Handle(CreateTouchScreenCommand request, CancellationToken cancellationToken)
         {
-            var touchScreen = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>().AddAsync(touchScreen);
+            var touchScreen = _mapper.Map<Domain.Entities.POS.TouchScreen>(request);
+            await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().AddAsync(touchScreen);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<TouchScreenDto>(touchScreen);
         }

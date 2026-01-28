@@ -26,7 +26,7 @@ namespace AstrolPOSAPI.Application.Features.StoreType.Commands.CreateStoreType
 
         public async Task<StoreTypeDto> Handle(CreateStoreTypeCommand request, CancellationToken cancellationToken)
         {
-            var storeType = new AtsrolPOSAPI.Domain.Entities.Core.StoreType
+            var storeType = new AstrolPOSAPI.Domain.Entities.Core.StoreType
             {
                 Code = request.Code,
                 Description = request.Description,
@@ -34,7 +34,7 @@ namespace AstrolPOSAPI.Application.Features.StoreType.Commands.CreateStoreType
                 CompanyId = request.CompanyId
             };
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.StoreType>().AddAsync(storeType);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.StoreType>().AddAsync(storeType);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<StoreTypeDto>(storeType);

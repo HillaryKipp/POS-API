@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.NoSeries.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 using MediatR;
 
@@ -29,7 +29,7 @@ namespace AstrolPOSAPI.Application.Features.NoSeries.Commands.UpdateNoSeries
 
         public async Task<NoSeriesDto> Handle(UpdateNoSeriesCommand request, CancellationToken cancellationToken)
         {
-            var noSeries = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>()
+            var noSeries = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>()
                 .GetByIdAsync(request.Id);
 
             if (noSeries == null)
@@ -41,7 +41,7 @@ namespace AstrolPOSAPI.Application.Features.NoSeries.Commands.UpdateNoSeries
             noSeries.Suffix = request.Suffix;
             noSeries.CurrentNo = request.CurrentNo;
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>().UpdateAsync(noSeries);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>().UpdateAsync(noSeries);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<NoSeriesDto>(noSeries);

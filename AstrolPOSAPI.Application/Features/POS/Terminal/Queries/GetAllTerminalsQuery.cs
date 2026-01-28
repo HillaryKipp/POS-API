@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Queries
 
         public async Task<List<TerminalDto>> Handle(GetAllTerminalsQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().GetAllAsync();
+            var items = await _unitOfWork.Repository<Domain.Entities.POS.Terminal>().GetAllAsync();
             var query = items.AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))

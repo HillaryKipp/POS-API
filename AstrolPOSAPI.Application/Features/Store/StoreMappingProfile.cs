@@ -1,6 +1,5 @@
-using AstrolPOSAPI.Application.Features
-
-.Store.DTOs;
+using AstrolPOSAPI.Application.Features.Store.DTOs;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 
 namespace AstrolPOSAPI.Application.Features.Store
@@ -9,9 +8,7 @@ namespace AstrolPOSAPI.Application.Features.Store
     {
         public StoreMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.Core.Store, StoreDto>();
-            CreateMap<CreateStoreDto, AtsrolPOSAPI.Domain.Entities.Core.Store>();
-            CreateMap<UpdateStoreDto, AtsrolPOSAPI.Domain.Entities.Core.Store>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.Core.Store, StoreDto>().ReverseMap();
         }
     }
 }

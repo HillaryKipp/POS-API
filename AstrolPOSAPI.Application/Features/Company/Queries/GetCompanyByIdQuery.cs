@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Queries
 
         public async Task<CompanyDto> Handle(GetCompanyByIdQuery request, CancellationToken cancellationToken)
         {
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>()
+            var company = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>()
                 .Entities
                 .FirstOrDefaultAsync(c => c.Id == request.Id && c.DeletedDate == null, cancellationToken);
 

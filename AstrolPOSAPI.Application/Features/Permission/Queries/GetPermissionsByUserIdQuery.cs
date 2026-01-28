@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.Permission.Queries
 
         public async Task<List<PermissionDto>> Handle(GetPermissionsByUserIdQuery request, CancellationToken cancellationToken)
         {
-            var allPermissions = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.Permission>().GetAllAsync();
+            var allPermissions = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Identity.Permission>().GetAllAsync();
             var permissions = allPermissions.Where(p => p.UserId == request.UserId).ToList();
 
             return _mapper.Map<List<PermissionDto>>(permissions);

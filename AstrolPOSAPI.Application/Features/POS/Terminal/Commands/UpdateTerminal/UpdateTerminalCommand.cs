@@ -40,13 +40,13 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.UpdateTerminal
 
         public async Task<TerminalDto> Handle(UpdateTerminalCommand request, CancellationToken cancellationToken)
         {
-            var terminal = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
+            var terminal = await _unitOfWork.Repository<Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
 
             if (terminal == null || terminal.DeletedDate != null)
                 throw new KeyNotFoundException($"Terminal with ID {request.Id} not found");
 
             _mapper.Map(request, terminal);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().UpdateAsync(terminal);
+            await _unitOfWork.Repository<Domain.Entities.POS.Terminal>().UpdateAsync(terminal);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<TerminalDto>(terminal);

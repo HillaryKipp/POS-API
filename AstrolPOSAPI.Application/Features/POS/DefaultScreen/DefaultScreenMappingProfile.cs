@@ -7,9 +7,12 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen
     {
         public DefaultScreenMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen, DefaultScreenDto>().ReverseMap();
-            CreateMap<CreateDefaultScreenDto, AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
-            CreateMap<UpdateDefaultScreenDto, AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.DefaultScreen, DefaultScreenDto>().ReverseMap();
+            CreateMap<CreateDefaultScreenDto, AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
+            CreateMap<UpdateDefaultScreenDto, AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
+            
+            CreateMap<AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.CreateDefaultScreen.CreateDefaultScreenCommand, AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.UpdateDefaultScreen.UpdateDefaultScreenCommand, AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>();
         }
     }
 }

@@ -1,5 +1,5 @@
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using MediatR;
 
 namespace AstrolPOSAPI.Application.Features.NoSeries.Commands.DeleteNoSeries
@@ -20,13 +20,13 @@ namespace AstrolPOSAPI.Application.Features.NoSeries.Commands.DeleteNoSeries
 
         public async Task Handle(DeleteNoSeriesCommand request, CancellationToken cancellationToken)
         {
-            var noSeries = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>()
+            var noSeries = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>()
                 .GetByIdAsync(request.Id);
 
             if (noSeries == null)
                 throw new KeyNotFoundException($"NoSeries with ID {request.Id} not found");
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>().DeleteAsync(noSeries);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>().DeleteAsync(noSeries);
             await _unitOfWork.Save(cancellationToken);
         }
     }

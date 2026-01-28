@@ -46,7 +46,7 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.UpdateGener
 
         public async Task<GeneralSettingsDto> Handle(UpdateGeneralSettingsCommand request, CancellationToken cancellationToken)
         {
-            var settings = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>()
+            var settings = await _unitOfWork.Repository<Domain.Entities.Core.GeneralSettings>()
                 .GetByIdAsync(request.Id);
 
             if (settings == null)
@@ -79,7 +79,21 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Commands.UpdateGener
             settings.SupportEmail = request.SupportEmail ?? settings.SupportEmail;
             settings.SupportPhone = request.SupportPhone ?? settings.SupportPhone;
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>().UpdateAsync(settings);
+            await _unitOfWork.Repository<Domain.Entities.Core.GeneralSettings>().UpdateAsync(settings);
+            
+            // Sync Company Name if changed
+            if (!string.IsNullOrWhiteSpace(request.CompanyName))
+            {
+                var company = await _unitOfWork.Repository<Domain.Entities.Core.Company>()
+                    .GetByIdAsync(settings.CompanyId);
+                
+                if (company != null && company.Name != request.CompanyName)
+                {
+                    company.Name = request.CompanyName;
+                    await _unitOfWork.Repository<Domain.Entities.Core.Company>().UpdateAsync(company);
+                }
+            }
+
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<GeneralSettingsDto>(settings);

@@ -1,5 +1,5 @@
 using AstrolPOSAPI.Application.Features.User.DTOs;
-using AtsrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.User.Queries
 {
-    public class GetAllUsersQuery : IRequest<List<UserDto>>
+    public class GetAllUsersQuery : IRequest<List<AstrolPOSAPI.Application.Features.User.DTOs.UserDto>>
     {
         public string? CompanyId { get; set; }
     }
 
-    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<UserDto>>
+    public class GetAllUsersQueryHandler : IRequestHandler<GetAllUsersQuery, List<AstrolPOSAPI.Application.Features.User.DTOs.UserDto>>
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly IMapper _mapper;

@@ -40,13 +40,13 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.UpdateDef
 
         public async Task<DefaultScreenDto> Handle(UpdateDefaultScreenCommand request, CancellationToken cancellationToken)
         {
-            var defaultScreen = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
+            var defaultScreen = await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
 
             if (defaultScreen == null || defaultScreen.DeletedDate != null)
                 throw new KeyNotFoundException($"DefaultScreen with ID {request.Id} not found");
 
             _mapper.Map(request, defaultScreen);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().UpdateAsync(defaultScreen);
+            await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().UpdateAsync(defaultScreen);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<DefaultScreenDto>(defaultScreen);

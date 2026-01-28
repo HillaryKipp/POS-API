@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.POS.Drawer.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.POS;
+using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -42,8 +42,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.CreateDrawer
 
         public async Task<DrawerDto> Handle(CreateDrawerCommand request, CancellationToken cancellationToken)
         {
-            var drawer = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.Drawer>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().AddAsync(drawer);
+            var drawer = _mapper.Map<AstrolPOSAPI.Domain.Entities.POS.Drawer>(request);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Drawer>().AddAsync(drawer);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<DrawerDto>(drawer);
         }

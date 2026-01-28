@@ -7,9 +7,9 @@ namespace AstrolPOSAPI.Application.Features.StoreType
     {
         public StoreTypeMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.Core.StoreType, StoreTypeDto>();
-            CreateMap<CreateStoreTypeDto, AtsrolPOSAPI.Domain.Entities.Core.StoreType>();
-            CreateMap<UpdateStoreTypeDto, AtsrolPOSAPI.Domain.Entities.Core.StoreType>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.Core.StoreType, StoreTypeDto>();
+            CreateMap<CreateStoreTypeDto, AstrolPOSAPI.Domain.Entities.Core.StoreType>();
+            CreateMap<UpdateStoreTypeDto, AstrolPOSAPI.Domain.Entities.Core.StoreType>();
         }
     }
 }

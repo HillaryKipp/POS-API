@@ -47,8 +47,8 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.CreateDrawe
 
         public async Task<DrawerGroupDto> Handle(CreateDrawerGroupCommand request, CancellationToken cancellationToken)
         {
-            var drawerGroup = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().AddAsync(drawerGroup);
+            var drawerGroup = _mapper.Map<Domain.Entities.POS.DrawerGroup>(request);
+            await _unitOfWork.Repository<Domain.Entities.POS.DrawerGroup>().AddAsync(drawerGroup);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<DrawerGroupDto>(drawerGroup);
         }

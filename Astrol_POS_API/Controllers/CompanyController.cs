@@ -1,4 +1,4 @@
-﻿using AstrolPOSAPI.Application.Features.Company.Commands.CreateCompany;
+using AstrolPOSAPI.Application.Features.Company.Commands.CreateCompany;
 using AstrolPOSAPI.Application.Features.Company.Commands.DeleteCompany;
 using AstrolPOSAPI.Application.Features.Company.Commands.UpdateCompany;
 using AstrolPOSAPI.Application.Features.Company.DTOs;
@@ -16,9 +16,9 @@ namespace Astrol_POS_API.WebAPI.Controllers
     {
         private readonly IMediator _mediator = mediator;
 
-        
+
         /// Get all companies
-        
+
         [HttpGet]
         [ProducesResponseType(typeof(List<CompanyDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAll()
@@ -27,14 +27,14 @@ namespace Astrol_POS_API.WebAPI.Controllers
             return Ok(companies);
         }
 
-        
+
         /// Get company by ID
-        
+
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetById(string id)
-        {
+        {   
             try
             {
                 var company = await _mediator.Send(new GetCompanyByIdQuery { Id = id });
@@ -46,9 +46,9 @@ namespace Astrol_POS_API.WebAPI.Controllers
             }
         }
 
-        
+
         /// Create a new company
-        
+
         [HttpPost]
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -58,9 +58,9 @@ namespace Astrol_POS_API.WebAPI.Controllers
             return CreatedAtAction(nameof(GetById), new { id = company.Id }, company);
         }
 
-        
+
         /// Update an existing company
-        
+
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(CompanyDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -83,9 +83,9 @@ namespace Astrol_POS_API.WebAPI.Controllers
             }
         }
 
-        
+
         /// Delete a company (soft delete)
-        
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

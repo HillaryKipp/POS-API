@@ -20,7 +20,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Commands.DeleteCompany
 
         public async Task<bool> Handle(DeleteCompanyCommand request, CancellationToken cancellationToken)
         {
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>()
+            var company = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>()
                 .Entities
                 .FirstOrDefaultAsync(c => c.Id == request.Id && c.DeletedDate == null, cancellationToken);
 
@@ -30,7 +30,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Commands.DeleteCompany
             }
 
             // Soft delete - the AppDbContext SaveChangesAsync will set DeletedDate
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>().DeleteAsync(company);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>().DeleteAsync(company);
             await _unitOfWork.Save(cancellationToken);
 
             return true;

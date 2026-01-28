@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Queries
 
         public async Task<List<DrawerDto>> Handle(GetAllDrawersQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().GetAllAsync();
+            var items = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Drawer>().GetAllAsync();
             var query = items.AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))

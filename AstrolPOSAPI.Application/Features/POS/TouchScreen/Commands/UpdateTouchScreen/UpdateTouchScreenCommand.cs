@@ -46,13 +46,13 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.UpdateTouch
 
         public async Task<TouchScreenDto> Handle(UpdateTouchScreenCommand request, CancellationToken cancellationToken)
         {
-            var touchScreen = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>().GetByIdAsync(request.Id);
+            var touchScreen = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().GetByIdAsync(request.Id);
 
             if (touchScreen == null || touchScreen.DeletedDate != null)
                 throw new KeyNotFoundException($"TouchScreen with ID {request.Id} not found");
 
             _mapper.Map(request, touchScreen);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>().UpdateAsync(touchScreen);
+            await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().UpdateAsync(touchScreen);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<TouchScreenDto>(touchScreen);

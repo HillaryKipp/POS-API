@@ -7,9 +7,9 @@ namespace AstrolPOSAPI.Application.Features.Permission
     {
         public PermissionMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.Identity.Permission, PermissionDto>();
-            CreateMap<CreatePermissionDto, AtsrolPOSAPI.Domain.Entities.Identity.Permission>();
-            CreateMap<UpdatePermissionDto, AtsrolPOSAPI.Domain.Entities.Identity.Permission>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.Identity.Permission, PermissionDto>();
+            CreateMap<CreatePermissionDto, AstrolPOSAPI.Domain.Entities.Identity.Permission>();
+            CreateMap<UpdatePermissionDto, AstrolPOSAPI.Domain.Entities.Identity.Permission>();
         }
     }
 }

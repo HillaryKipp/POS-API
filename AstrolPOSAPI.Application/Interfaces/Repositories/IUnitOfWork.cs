@@ -1,9 +1,4 @@
-﻿using AtsrolPOSAPI.Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AstrolPOSAPI.Domain.Common;
 
 namespace AstrolPOSAPI.Application.Interfaces.Repositories
 {

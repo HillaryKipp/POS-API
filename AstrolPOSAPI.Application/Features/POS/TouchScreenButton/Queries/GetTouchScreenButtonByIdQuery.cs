@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreenButton.Queries
 
         public async Task<TouchScreenButtonDto> Handle(GetTouchScreenButtonByIdQuery request, CancellationToken cancellationToken)
         {
-            var button = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>().GetByIdAsync(request.Id);
+            var button = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreenButton>().GetByIdAsync(request.Id);
 
             if (button == null || button.DeletedDate != null)
                 throw new KeyNotFoundException($"TouchScreenButton with ID {request.Id} not found");

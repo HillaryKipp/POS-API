@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.POS.Drawer.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.POS;
+using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -44,13 +44,13 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.UpdateDrawer
 
         public async Task<DrawerDto> Handle(UpdateDrawerCommand request, CancellationToken cancellationToken)
         {
-            var drawer = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
+            var drawer = await _unitOfWork.Repository<Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
 
             if (drawer == null || drawer.DeletedDate != null)
                 throw new KeyNotFoundException($"Drawer with ID {request.Id} not found");
 
             _mapper.Map(request, drawer);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().UpdateAsync(drawer);
+            await _unitOfWork.Repository<Domain.Entities.POS.Drawer>().UpdateAsync(drawer);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<DrawerDto>(drawer);

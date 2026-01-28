@@ -38,10 +38,8 @@ namespace Astrol_POS_API.WebAPI.Controllers
                 // For development, we're returning it so you can test
                 return Ok(new
                 {
-                    message = "OTP sent successfully",
-                    expiresAt = result.ExpiresAt,
-                    // Remove this in production!
-                    otpCode = result.Id // Just for testing - in production, send via SMS only
+                    message = "OTP sent successfully via SMS",
+                    expiresAt = result.ExpiresAt
                 });
             }
             catch (Exception ex)

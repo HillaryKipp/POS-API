@@ -7,9 +7,9 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal
     {
         public TerminalMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.Terminal, TerminalDto>().ReverseMap();
-            CreateMap<CreateTerminalDto, AtsrolPOSAPI.Domain.Entities.POS.Terminal>();
-            CreateMap<UpdateTerminalDto, AtsrolPOSAPI.Domain.Entities.POS.Terminal>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.Terminal, TerminalDto>().ReverseMap();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.Terminal.Commands.CreateTerminal.CreateTerminalCommand, AstrolPOSAPI.Domain.Entities.POS.Terminal>();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.Terminal.Commands.UpdateTerminal.UpdateTerminalCommand, AstrolPOSAPI.Domain.Entities.POS.Terminal>();
         }
     }
 }

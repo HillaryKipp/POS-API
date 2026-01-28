@@ -1,3 +1,4 @@
+using AstrolPOSAPI.Application.Features.POS.Drawer.Commands.CreateDrawer;
 using AstrolPOSAPI.Application.Features.POS.Drawer.DTOs;
 using AutoMapper;
 
@@ -7,9 +8,9 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer
     {
         public DrawerMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.Drawer, DrawerDto>().ReverseMap();
-            CreateMap<CreateDrawerDto, AtsrolPOSAPI.Domain.Entities.POS.Drawer>();
-            CreateMap<UpdateDrawerDto, AtsrolPOSAPI.Domain.Entities.POS.Drawer>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.Drawer, DrawerDto>().ReverseMap();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.Drawer.Commands.CreateDrawer.CreateDrawerCommand, AstrolPOSAPI.Domain.Entities.POS.Drawer>();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.Drawer.Commands.UpdateDrawer.UpdateDrawerCommand, AstrolPOSAPI.Domain.Entities.POS.Drawer>();
         }
     }
 }

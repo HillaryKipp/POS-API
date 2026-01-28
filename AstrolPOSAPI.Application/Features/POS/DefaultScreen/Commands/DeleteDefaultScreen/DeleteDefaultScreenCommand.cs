@@ -1,4 +1,5 @@
 using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AstrolPOSAPI.Domain.Entities.POS;
 using MediatR;
 
 namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.DeleteDefaultScreen
@@ -19,13 +20,13 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.DeleteDef
 
         public async Task<bool> Handle(DeleteDefaultScreenCommand request, CancellationToken cancellationToken)
         {
-            var defaultScreen = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
+            var defaultScreen = await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
 
             if (defaultScreen == null)
                 throw new KeyNotFoundException($"DefaultScreen with ID {request.Id} not found");
 
             defaultScreen.DeletedDate = DateTime.UtcNow;
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().UpdateAsync(defaultScreen);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>().UpdateAsync(defaultScreen);
             await _unitOfWork.Save(cancellationToken);
 
             return true;

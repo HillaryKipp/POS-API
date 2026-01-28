@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Queries
 
         public async Task<DrawerDto> Handle(GetDrawerByIdQuery request, CancellationToken cancellationToken)
         {
-            var drawer = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
+            var drawer = await _unitOfWork.Repository<Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
 
             if (drawer == null || drawer.DeletedDate != null)
                 throw new KeyNotFoundException($"Drawer with ID {request.Id} not found");

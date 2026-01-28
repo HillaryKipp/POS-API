@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
 
         public async Task<TouchScreenDto> Handle(GetTouchScreenByIdQuery request, CancellationToken cancellationToken)
         {
-            var touchScreen = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>().GetByIdAsync(request.Id);
+            var touchScreen = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().GetByIdAsync(request.Id);
 
             if (touchScreen == null || touchScreen.DeletedDate != null)
                 throw new KeyNotFoundException($"TouchScreen with ID {request.Id} not found");
@@ -34,7 +34,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
             // Load buttons if requested
             if (request.IncludeButtons)
             {
-                var buttons = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>().GetAllAsync();
+                var buttons = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreenButton>().GetAllAsync();
                 var screenButtons = buttons.Where(b => b.TouchScreenId == request.Id && b.DeletedDate == null).ToList();
                 dto.Buttons = _mapper.Map<List<TouchScreenButtonDto>>(screenButtons);
             }

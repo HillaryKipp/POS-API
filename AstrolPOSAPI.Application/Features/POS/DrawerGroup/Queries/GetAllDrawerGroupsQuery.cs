@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Queries
 
         public async Task<List<DrawerGroupDto>> Handle(GetAllDrawerGroupsQuery request, CancellationToken cancellationToken)
         {
-            var allDrawerGroups = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetAllAsync();
+            var allDrawerGroups = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetAllAsync();
 
             var query = allDrawerGroups.AsQueryable();
 

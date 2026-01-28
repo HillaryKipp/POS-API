@@ -44,8 +44,8 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.CreateAs
 
         public async Task<AssignedDrawerDto> Handle(CreateAssignedDrawerCommand request, CancellationToken cancellationToken)
         {
-            var assignedDrawer = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().AddAsync(assignedDrawer);
+            var assignedDrawer = _mapper.Map<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>(request);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().AddAsync(assignedDrawer);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<AssignedDrawerDto>(assignedDrawer);
         }

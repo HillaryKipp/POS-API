@@ -1,5 +1,5 @@
 using AstrolPOSAPI.Application.Features.User.DTOs;
-using AtsrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using AutoMapper;
 
 namespace AstrolPOSAPI.Application.Features.User

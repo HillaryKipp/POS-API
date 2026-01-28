@@ -40,7 +40,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.UpdateDrawe
 
         public async Task<DrawerGroupDto> Handle(UpdateDrawerGroupCommand request, CancellationToken cancellationToken)
         {
-            var drawerGroup = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
+            var drawerGroup = await _unitOfWork.Repository<Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
 
             if (drawerGroup == null)
                 throw new KeyNotFoundException($"DrawerGroup with ID {request.Id} not found");
@@ -49,7 +49,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.UpdateDrawe
                 throw new KeyNotFoundException($"DrawerGroup with ID {request.Id} was deleted");
 
             _mapper.Map(request, drawerGroup);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().UpdateAsync(drawerGroup);
+            await _unitOfWork.Repository<Domain.Entities.POS.DrawerGroup>().UpdateAsync(drawerGroup);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<DrawerGroupDto>(drawerGroup);

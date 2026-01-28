@@ -20,6 +20,7 @@ namespace Astrol_POS_API.WebAPI.Controllers
             _mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("company/{companyId}")]
         [ProducesResponseType(typeof(GeneralSettingsDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

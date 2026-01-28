@@ -38,8 +38,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.CreateTerminal
 
         public async Task<TerminalDto> Handle(CreateTerminalCommand request, CancellationToken cancellationToken)
         {
-            var terminal = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.Terminal>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().AddAsync(terminal);
+            var terminal = _mapper.Map<Domain.Entities.POS.Terminal>(request);
+            await _unitOfWork.Repository<Domain.Entities.POS.Terminal>().AddAsync(terminal);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<TerminalDto>(terminal);
         }

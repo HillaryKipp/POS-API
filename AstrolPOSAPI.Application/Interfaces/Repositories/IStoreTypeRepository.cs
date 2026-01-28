@@ -1,4 +1,4 @@
-﻿using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;

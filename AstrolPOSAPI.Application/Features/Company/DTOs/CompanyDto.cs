@@ -2,11 +2,9 @@ namespace AstrolPOSAPI.Application.Features.Company.DTOs
 {
     public class CompanyDto
     {
-        public string Id { get; set; } = default!;
-        public string Code { get; set; } = default!;
-        public string Name { get; set; } = default!;
+        public string Id { get; set; } = string.Empty;
+        public string Code { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public string? Description { get; set; }
-        public DateTime? CreatedDate { get; set; }
-        public DateTime? UpdatedDate { get; set; }
     }
 }

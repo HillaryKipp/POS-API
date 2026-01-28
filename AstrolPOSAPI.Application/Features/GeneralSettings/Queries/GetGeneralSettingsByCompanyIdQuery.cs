@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings.Queries
 
         public async Task<GeneralSettingsDto> Handle(GetGeneralSettingsByCompanyIdQuery request, CancellationToken cancellationToken)
         {
-            var allSettings = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>().GetAllAsync();
+            var allSettings = await _unitOfWork.Repository<Domain.Entities.Core.GeneralSettings>().GetAllAsync();
             var settings = allSettings.FirstOrDefault(gs => gs.CompanyId == request.CompanyId);
 
             if (settings == null)

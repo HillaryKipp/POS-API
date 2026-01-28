@@ -7,12 +7,19 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen
     {
         public TouchScreenMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen, TouchScreenDto>().ReverseMap();
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton, TouchScreenButtonDto>().ReverseMap();
-            CreateMap<CreateTouchScreenDto, AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>();
-            CreateMap<UpdateTouchScreenDto, AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>();
-            CreateMap<CreateTouchScreenButtonDto, AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
-            CreateMap<UpdateTouchScreenButtonDto, AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.TouchScreen, TouchScreenDto>().ReverseMap();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton, TouchScreenButtonDto>().ReverseMap();
+            CreateMap<CreateTouchScreenDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
+            CreateMap<UpdateTouchScreenDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
+            CreateMap<CreateTouchScreenButtonDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
+            CreateMap<UpdateTouchScreenButtonDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
+            
+            CreateMap<AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.CreateTouchScreen.CreateTouchScreenCommand, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.UpdateTouchScreen.UpdateTouchScreenCommand, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
+
+            // Add Command mappings for TouchScreenButton if missing elsewhere
+            CreateMap<AstrolPOSAPI.Application.Features.POS.TouchScreenButton.Commands.CreateTouchScreenButton.CreateTouchScreenButtonCommand, AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
+            CreateMap<AstrolPOSAPI.Application.Features.POS.TouchScreenButton.Commands.UpdateTouchScreenButton.UpdateTouchScreenButtonCommand, AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();
         }
     }
 }

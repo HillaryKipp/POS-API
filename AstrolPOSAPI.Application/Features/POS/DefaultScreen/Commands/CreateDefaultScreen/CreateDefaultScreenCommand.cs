@@ -38,8 +38,8 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Commands.CreateDef
 
         public async Task<DefaultScreenDto> Handle(CreateDefaultScreenCommand request, CancellationToken cancellationToken)
         {
-            var defaultScreen = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().AddAsync(defaultScreen);
+            var defaultScreen = _mapper.Map<AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>(request);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DefaultScreen>().AddAsync(defaultScreen);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<DefaultScreenDto>(defaultScreen);
         }

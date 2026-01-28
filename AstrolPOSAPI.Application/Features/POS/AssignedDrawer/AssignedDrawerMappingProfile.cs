@@ -7,9 +7,9 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer
     {
         public AssignedDrawerMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer, AssignedDrawerDto>().ReverseMap();
-            CreateMap<CreateAssignedDrawerDto, AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
-            CreateMap<UpdateAssignedDrawerDto, AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
+            CreateMap<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer, AssignedDrawerDto>().ReverseMap();
+            CreateMap<CreateAssignedDrawerDto, AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
+            CreateMap<UpdateAssignedDrawerDto, AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
         }
     }
 }

@@ -1,4 +1,4 @@
-using AtsrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

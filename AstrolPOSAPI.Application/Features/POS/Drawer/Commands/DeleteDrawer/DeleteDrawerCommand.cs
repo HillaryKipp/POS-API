@@ -19,13 +19,13 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.DeleteDrawer
 
         public async Task<bool> Handle(DeleteDrawerCommand request, CancellationToken cancellationToken)
         {
-            var drawer = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
+            var drawer = await _unitOfWork.Repository<Domain.Entities.POS.Drawer>().GetByIdAsync(request.Id);
 
             if (drawer == null)
                 throw new KeyNotFoundException($"Drawer with ID {request.Id} not found");
 
             drawer.DeletedDate = DateTime.UtcNow;
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Drawer>().UpdateAsync(drawer);
+            await _unitOfWork.Repository<Domain.Entities.POS.Drawer>().UpdateAsync(drawer);
             await _unitOfWork.Save(cancellationToken);
 
             return true;

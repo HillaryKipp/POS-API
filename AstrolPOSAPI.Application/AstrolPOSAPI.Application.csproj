@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <Folder Include="Common\" />
-    <Folder Include="DT0s\" />
+    <Folder Include="DTOs\" />
     <Folder Include="Features\Company\Commands\DeleteCompany\" />
     <Folder Include="Features\Company\Commands\UpdateCompany\" />
     <Folder Include="Features\Company\DTOs\" />
@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AtsrolPOSAPI.Domain\AtsrolPOSAPI.Domain.csproj" />
+    <ProjectReference Include="..\AstrolPOSAPI.Domain\AstrolPOSAPI.Domain.csproj" />
   </ItemGroup>
 
 </Project>

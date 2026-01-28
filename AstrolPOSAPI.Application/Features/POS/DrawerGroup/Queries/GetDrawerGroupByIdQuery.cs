@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Queries
 
         public async Task<DrawerGroupDto> Handle(GetDrawerGroupByIdQuery request, CancellationToken cancellationToken)
         {
-            var drawerGroup = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
+            var drawerGroup = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
 
             if (drawerGroup == null || drawerGroup.DeletedDate != null)
                 throw new KeyNotFoundException($"DrawerGroup with ID {request.Id} not found");

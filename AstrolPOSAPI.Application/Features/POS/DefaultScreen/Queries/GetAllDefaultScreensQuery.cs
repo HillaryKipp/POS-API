@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Queries
 
         public async Task<List<DefaultScreenDto>> Handle(GetAllDefaultScreensQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().GetAllAsync();
+            var items = await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().GetAllAsync();
             var query = items.AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))

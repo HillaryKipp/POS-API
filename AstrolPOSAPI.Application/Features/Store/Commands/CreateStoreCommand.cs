@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.Store.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 using MediatR;
 
@@ -31,11 +31,11 @@ namespace AstrolPOSAPI.Application.Features.Store.Commands.CreateStore
         public async Task<StoreDto> Handle(CreateStoreCommand request, CancellationToken cancellationToken)
         {
             // Validate Company exists
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
+            var company = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
             if (company == null)
                 throw new InvalidOperationException($"Company with ID {request.CompanyId} not found");
 
-            var store = new AtsrolPOSAPI.Domain.Entities.Core.Store
+            var store = new AstrolPOSAPI.Domain.Entities.Core.Store
             {
                 Code = request.Code,
                 Name = request.Name,
@@ -46,7 +46,7 @@ namespace AstrolPOSAPI.Application.Features.Store.Commands.CreateStore
                 PhoneNumber = request.PhoneNumber
             };
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Store>().AddAsync(store);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Store>().AddAsync(store);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<StoreDto>(store);

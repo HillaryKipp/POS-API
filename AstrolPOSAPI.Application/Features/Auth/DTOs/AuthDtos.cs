@@ -13,7 +13,8 @@ namespace AstrolPOSAPI.Application.Features.Auth.DTOs
         public string? Name { get; set; }
         public string CompanyId { get; set; } = default!;
         public string? CompanyName { get; set; }
-        public string? Role{ get; set; }
+        public string? phoneNumber { get; set; }
+        public string? Role { get; set; }
         public List<StoreInfoDto> Stores { get; set; } = new();
         public bool HasOtp { get; set; }
         public bool PasswordChangeRequired { get; set; }

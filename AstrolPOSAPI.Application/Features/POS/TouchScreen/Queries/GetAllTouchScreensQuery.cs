@@ -2,7 +2,7 @@ using AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;    
 
 namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
 {
@@ -26,7 +26,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
 
         public async Task<List<TouchScreenDto>> Handle(GetAllTouchScreensQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreen>().GetAllAsync();
+            var items = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().GetAllAsync();
             var query = items.AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))

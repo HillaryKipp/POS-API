@@ -1,5 +1,5 @@
+using AstrolPOSAPI.Domain.Entities.POS;
 using System.ComponentModel.DataAnnotations;
-using AtsrolPOSAPI.Domain.Entities.POS;
 
 namespace AstrolPOSAPI.Application.Features.POS.Drawer.DTOs
 {

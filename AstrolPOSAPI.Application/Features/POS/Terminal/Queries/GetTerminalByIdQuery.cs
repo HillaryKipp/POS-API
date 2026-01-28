@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Queries
 
         public async Task<TerminalDto> Handle(GetTerminalByIdQuery request, CancellationToken cancellationToken)
         {
-            var terminal = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
+            var terminal = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
 
             if (terminal == null || terminal.DeletedDate != null)
                 throw new KeyNotFoundException($"Terminal with ID {request.Id} not found");

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using AstrolPOSAPI.Application.Features.Auth.DTOs;
 using AstrolPOSAPI.Persistence.Contexts;
-using AtsrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -37,7 +37,7 @@ namespace AstrolPOSAPI.WebAPI.Controllers
             _dbContext = dbContext;
         }
 
-        public record RegisterRequest(string UserName, string Password, string Name, string? NationalID, string? StoreOfOperationId);
+        public record RegisterRequest(string UserName, string Password, string Name, string? NationalID, string? StoreOfOperationId, string CompanyId);
         public record LoginRequest(string UserName, string Password);
 
         [HttpPost("register")]
@@ -48,6 +48,7 @@ namespace AstrolPOSAPI.WebAPI.Controllers
             {
                 UserName = request.UserName,
                 Name = request.Name,
+                CompanyId = request.CompanyId,
                 NationalID = request.NationalID,
                 StoreOfOperationId = request.StoreOfOperationId,
                 IsActive = true
@@ -121,6 +122,7 @@ namespace AstrolPOSAPI.WebAPI.Controllers
                     Stores = stores,
                     HasOtp = generalSettings?.HasOtp ?? false,
                     PasswordChangeRequired = user.PasswordChangeRequired,
+                    phoneNumber = user.PhoneNumber,
                     Role = user.Role,
                 }
             };
@@ -323,6 +325,41 @@ namespace AstrolPOSAPI.WebAPI.Controllers
             catch (KeyNotFoundException)
             {
                 return NotFound(new { message = $"User with ID {id} not found" });
+            }
+        }
+
+        [HttpGet("roles")]
+        [Authorize]
+        [ProducesResponseType(typeof(List<string>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRoles([FromServices] IMediator mediator)
+        {
+            var roles = await mediator.Send(new AstrolPOSAPI.Application.Features.User.Queries.GetRoles.GetRolesQuery());
+            return Ok(roles);
+        }
+
+        [HttpPut("users/{id}")]
+        [Authorize(Roles = "Admin")]
+        [ProducesResponseType(typeof(AstrolPOSAPI.Application.Features.User.DTOs.UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> UpdateUser([FromServices] IMediator mediator, string id,
+            [FromBody] AstrolPOSAPI.Application.Features.User.Commands.UpdateUser.UpdateUserCommand command)
+        {
+            try
+            {
+                if (id != command.Id)
+                    return BadRequest(new { message = "ID mismatch between route and body" });
+
+                var user = await mediator.Send(command);
+                return Ok(user);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound(new { message = $"User with ID {id} not found" });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
 

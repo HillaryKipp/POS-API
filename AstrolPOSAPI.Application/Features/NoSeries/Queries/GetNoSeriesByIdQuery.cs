@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.NoSeries.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 using MediatR;
 
@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.NoSeries.Queries
 
         public async Task<NoSeriesDto> Handle(GetNoSeriesByIdQuery request, CancellationToken cancellationToken)
         {
-            var noSeries = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>()
+            var noSeries = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>()
                 .GetByIdAsync(request.Id);
 
             if (noSeries == null)

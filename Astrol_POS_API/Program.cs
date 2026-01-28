@@ -1,11 +1,11 @@
 using System.Text;
 using AstrolPOSAPI.Application.Features.Company;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using AstrolPOSAPI.Infrastructure;
 using AstrolPOSAPI.Persistence;
 using AstrolPOSAPI.Persistence.Contexts;
 using AstrolPOSAPI.Persistence.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -35,7 +35,7 @@ var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
 
 builder.Services
-    .AddIdentity<AppUser, AtsrolPOSAPI.Domain.Entities.Identity.AppRole>(options =>
+    .AddIdentity<AppUser, AstrolPOSAPI.Domain.Entities.Identity.AppRole>(options =>
     {
         options.Password.RequiredLength = 6;
         options.Password.RequireNonAlphanumeric = false;
@@ -46,6 +46,8 @@ builder.Services
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,15 +55,19 @@ builder.Services.AddAuthentication(options =>
 })
 .AddJwtBearer(options =>
 {
+    var jwtIssuer = Environment.GetEnvironmentVariable("JWT_ISSUER") ?? builder.Configuration["Jwt:Issuer"];
+    var jwtAudience = Environment.GetEnvironmentVariable("JWT_AUDIENCE") ?? builder.Configuration["Jwt:Audience"];
+    var jwtKey = Environment.GetEnvironmentVariable("JWT_KEY") ?? builder.Configuration["Jwt:Key"];
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+        ValidIssuer = jwtIssuer,
+        ValidAudience = jwtAudience,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!))
     };
 });
 
@@ -79,9 +85,28 @@ builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssembly(typeof(AstrolPOSAPI.Application.Features.Company.Commands.CreateCompany.CreateCompanyCommand).Assembly);
 
 // Add Infrastructure layer (includes NoSeriesService)
-builder.Services.AddInfrastructureLayer();
+builder.Services.AddInfrastructureLayer(builder.Configuration);
 
 builder.Services.AddControllers();
+
+// ---------------------------
+// PRODUCTION READINESS: Security
+// ---------------------------
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DefaultPolicy", policy =>
+    {
+        policy.AllowAnyOrigin() // Replace with specific origins in production
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
+    // Add specific rate limiting policies here
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -159,6 +184,10 @@ app.UseSwaggerUI(c =>
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseCors("DefaultPolicy");
+app.UseRateLimiter();
 
 app.UseAuthentication();
 app.UseAuthorization();

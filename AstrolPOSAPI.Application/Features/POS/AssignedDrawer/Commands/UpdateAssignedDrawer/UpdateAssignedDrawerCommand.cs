@@ -46,13 +46,13 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.UpdateAs
 
         public async Task<AssignedDrawerDto> Handle(UpdateAssignedDrawerCommand request, CancellationToken cancellationToken)
         {
-            var assignedDrawer = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().GetByIdAsync(request.Id);
+            var assignedDrawer = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().GetByIdAsync(request.Id);
 
             if (assignedDrawer == null || assignedDrawer.DeletedDate != null)
                 throw new KeyNotFoundException($"AssignedDrawer with ID {request.Id} not found");
 
             _mapper.Map(request, assignedDrawer);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().UpdateAsync(assignedDrawer);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>().UpdateAsync(assignedDrawer);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<AssignedDrawerDto>(assignedDrawer);

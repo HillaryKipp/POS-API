@@ -19,14 +19,14 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.DeleteDrawe
 
         public async Task<bool> Handle(DeleteDrawerGroupCommand request, CancellationToken cancellationToken)
         {
-            var drawerGroup = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
+            var drawerGroup = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetByIdAsync(request.Id);
 
             if (drawerGroup == null)
                 throw new KeyNotFoundException($"DrawerGroup with ID {request.Id} not found");
 
             // Soft delete
             drawerGroup.DeletedDate = DateTime.UtcNow;
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup>().UpdateAsync(drawerGroup);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().UpdateAsync(drawerGroup);
             await _unitOfWork.Save(cancellationToken);
 
             return true;

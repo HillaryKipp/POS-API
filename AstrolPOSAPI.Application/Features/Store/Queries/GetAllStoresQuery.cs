@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.Store.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -25,7 +25,7 @@ namespace AstrolPOSAPI.Application.Features.Store.Queries
 
         public async Task<List<StoreDto>> Handle(GetAllStoresQuery request, CancellationToken cancellationToken)
         {
-            var query = _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Store>().GetAllAsync();
+            var query = _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Store>().GetAllAsync();
 
             var stores = await query;
 

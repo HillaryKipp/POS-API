@@ -1,8 +1,8 @@
 using AstrolPOSAPI.Application.Features.User.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Application.Interfaces.Services;
-using AtsrolPOSAPI.Domain.Entities.Core;
-using AtsrolPOSAPI.Domain.Entities.Identity;
+using AstrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Identity;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -53,14 +53,14 @@ namespace AstrolPOSAPI.Application.Features.User.Commands.CreateUser
         public async Task<UserDto> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
             // Validate Company exists
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
+            var company = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>().GetByIdAsync(request.CompanyId);
             if (company == null)
                 throw new InvalidOperationException($"Company with ID {request.CompanyId} not found");
 
             // Validate primary store if provided
             if (request.StoreOfOperationId != null)
             {
-                var store = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Store>().GetByIdAsync(request.StoreOfOperationId);
+                var store = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Store>().GetByIdAsync(request.StoreOfOperationId);
                 if (store == null)
                     throw new InvalidOperationException($"Store with ID {request.StoreOfOperationId} not found");
 
@@ -73,7 +73,7 @@ namespace AstrolPOSAPI.Application.Features.User.Commands.CreateUser
             {
                 foreach (var storeId in request.StoreIds)
                 {
-                    var assignedStore = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Store>().GetByIdAsync(storeId);
+                    var assignedStore = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Store>().GetByIdAsync(storeId);
                     if (assignedStore == null)
                         throw new InvalidOperationException($"Store with ID {storeId} not found");
 
@@ -99,7 +99,12 @@ namespace AstrolPOSAPI.Application.Features.User.Commands.CreateUser
                 PasswordChangeRequired = true // Force password change on first login
             };
 
-            var result = await _userManager.CreateAsync(user, request.Password);
+            // Generate default password if not provided
+            var password = !string.IsNullOrEmpty(request.Password) 
+                ? request.Password 
+                : $"Pass@{empNo}"; // Default pattern: Pass + EmpNo (e.g. Pass@EMP001)
+
+            var result = await _userManager.CreateAsync(user, password);
 
             if (!result.Succeeded)
             {

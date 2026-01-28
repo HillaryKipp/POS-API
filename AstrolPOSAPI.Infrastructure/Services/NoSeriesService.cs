@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Application.Interfaces.Services;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Infrastructure.Services

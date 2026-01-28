@@ -19,13 +19,13 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.DeleteTerminal
 
         public async Task<bool> Handle(DeleteTerminalCommand request, CancellationToken cancellationToken)
         {
-            var terminal = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
+            var terminal = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Terminal>().GetByIdAsync(request.Id);
 
             if (terminal == null)
                 throw new KeyNotFoundException($"Terminal with ID {request.Id} not found");
 
             terminal.DeletedDate = DateTime.UtcNow;
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.Terminal>().UpdateAsync(terminal);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Terminal>().UpdateAsync(terminal);
             await _unitOfWork.Save(cancellationToken);
 
             return true;

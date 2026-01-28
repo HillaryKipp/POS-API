@@ -27,7 +27,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Commands.UpdateCompany
 
         public async Task<CompanyDto> Handle(UpdateCompanyCommand request, CancellationToken cancellationToken)
         {
-            var company = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>()
+            var company = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>()
                 .Entities
                 .FirstOrDefaultAsync(c => c.Id == request.Id && c.DeletedDate == null, cancellationToken);
 
@@ -40,7 +40,7 @@ namespace AstrolPOSAPI.Application.Features.Company.Commands.UpdateCompany
             company.Name = request.Name;
             company.Description = request.Description;
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.Company>().UpdateAsync(company);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.Company>().UpdateAsync(company);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<CompanyDto>(company);

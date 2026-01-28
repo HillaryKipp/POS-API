@@ -1,6 +1,6 @@
-﻿using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Persistence.Contexts;
-using AtsrolPOSAPI.Domain.Common;
+using AstrolPOSAPI.Domain.Common;
 using System.Collections;
 
 namespace AstrolPOSAPI.Persistence.Repositories
@@ -8,13 +8,15 @@ namespace AstrolPOSAPI.Persistence.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly AppDbContext _dbContext;
+        private readonly Microsoft.Extensions.Caching.Memory.IMemoryCache _cache;
         private Hashtable _repositories;
         private bool disposed;
 
-        public UnitOfWork(AppDbContext dbContext)
+        public UnitOfWork(AppDbContext dbContext, Microsoft.Extensions.Caching.Memory.IMemoryCache cache)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _repositories = new Hashtable(); // Initialize here
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _repositories = new Hashtable();
         }
 
         public IGenericRepository<T> Repository<T>() where T : BaseAuditableEntity
@@ -33,7 +35,7 @@ namespace AstrolPOSAPI.Persistence.Repositories
                 _repositories.Add(type, repositoryInstance);
             }
 
-            return (IGenericRepository<T>)_repositories[type];
+            return (IGenericRepository<T>)(_repositories[type] ?? throw new InvalidOperationException($"Repository for {type} not found"));
         }
 
         public Task Rollback()
@@ -52,10 +54,14 @@ namespace AstrolPOSAPI.Persistence.Repositories
             // Persist changes
             var result = await Save(cancellationToken);
 
-            // If/when you introduce a distributed cache (IDistributedCache or a cache service),
-            // remove keys here. This is a no-op until a cache implementation is available.
-            // Example (if you add IDistributedCache to this class):
-            // foreach (var key in cacheKeys) { await _cache.RemoveAsync(key); }
+            // Invalidate cache
+            if (cacheKeys != null)
+            {
+                foreach (var key in cacheKeys)
+                {
+                    _cache.Remove(key);
+                }
+            }
 
             return result;
         }

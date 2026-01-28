@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.NoSeries.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.Core;
+using AstrolPOSAPI.Domain.Entities.Core;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -24,7 +24,7 @@ namespace AstrolPOSAPI.Application.Features.NoSeries.Queries
 
         public async Task<List<NoSeriesDto>> Handle(GetAllNoSeriesQuery request, CancellationToken cancellationToken)
         {
-            var noSeriesList = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Core.NoSeries>()
+            var noSeriesList = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Core.NoSeries>()
                 .GetAllAsync();
 
             return _mapper.Map<List<NoSeriesDto>>(noSeriesList);

@@ -1,4 +1,4 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36705.20
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{2845BD22-03BA-49C9-8D76-6A09621B7884}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AtsrolPOSAPI.Domain", "AtsrolPOSAPI.Domain\AtsrolPOSAPI.Domain.csproj", "{D1649DB6-B205-43F8-9312-C13BFF1A9E72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstrolPOSAPI.Domain", "AstrolPOSAPI.Domain\AstrolPOSAPI.Domain.csproj", "{D1649DB6-B205-43F8-9312-C13BFF1A9E72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AstrolPOSAPI.Application", "AstrolPOSAPI.Application\AstrolPOSAPI.Application.csproj", "{A119E838-B278-44E9-A4B2-E5571C064F08}"
 EndProject

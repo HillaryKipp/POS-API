@@ -1,6 +1,6 @@
 using AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AtsrolPOSAPI.Domain.Entities.POS;
+using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
@@ -60,8 +60,8 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreenButton.Commands.Creat
 
         public async Task<TouchScreenButtonDto> Handle(CreateTouchScreenButtonCommand request, CancellationToken cancellationToken)
         {
-            var button = _mapper.Map<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>(request);
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton>().AddAsync(button);
+            var button = _mapper.Map<Domain.Entities.POS.TouchScreenButton>(request);
+            await _unitOfWork.Repository<Domain.Entities.POS.TouchScreenButton>().AddAsync(button);
             await _unitOfWork.Save(cancellationToken);
             return _mapper.Map<TouchScreenButtonDto>(button);
         }

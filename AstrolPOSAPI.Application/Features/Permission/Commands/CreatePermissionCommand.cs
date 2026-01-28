@@ -35,7 +35,7 @@ namespace AstrolPOSAPI.Application.Features.Permission.Commands
             if (string.IsNullOrEmpty(request.UserId) && string.IsNullOrEmpty(request.RoleId))
                 throw new InvalidOperationException("Permission must be assigned to either a User or a Role");
 
-            var permission = new AtsrolPOSAPI.Domain.Entities.Identity.Permission
+            var permission = new AstrolPOSAPI.Domain.Entities.Identity.Permission
             {
                 UserId = request.UserId,
                 RoleId = request.RoleId,
@@ -46,7 +46,7 @@ namespace AstrolPOSAPI.Application.Features.Permission.Commands
                 CanDelete = request.CanDelete
             };
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.Permission>().AddAsync(permission);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Identity.Permission>().AddAsync(permission);
             await _unitOfWork.Save(cancellationToken);
 
             return _mapper.Map<PermissionDto>(permission);

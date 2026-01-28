@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,5 +6,9 @@
     <Nullable>enable</Nullable>
     <LangVersion>13.0</LangVersion>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AstrolPOSAPI.Domain\AstrolPOSAPI.Domain.csproj" />
+  </ItemGroup>
 
 </Project>

@@ -22,7 +22,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Audit.AuditLog", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Audit.AuditLog", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -32,11 +32,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasMaxLength(32)
                         .HasColumnType("nvarchar(32)");
 
-                    b.Property<string>("CorrelationId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("KeyValues")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NewValues")
@@ -46,9 +42,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("OldValues")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RequestPath")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TableName")
@@ -64,7 +57,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("AuditLogs");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.Company", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.Company", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -102,10 +95,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.GeneralSettings", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -227,7 +223,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("GeneralSettings");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.NoSeries", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.NoSeries", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -257,6 +253,9 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<bool>("Manual")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Prefix")
                         .HasColumnType("nvarchar(max)");
 
@@ -274,7 +273,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("NoSeries");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.Store", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.Store", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -325,6 +324,8 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code");
+
                     b.HasIndex("CompanyId");
 
                     b.HasIndex("StoreTypeId");
@@ -332,7 +333,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.StoreType", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.StoreType", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -373,10 +374,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("StoreTypes");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.AppRole", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.AppRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -406,7 +410,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -415,7 +419,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("CompanyId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -442,9 +445,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<DateTimeOffset?>("LastLoginAt")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("LastLoginIP")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -455,6 +455,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -515,7 +516,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.OTP", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.OTP", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -581,10 +582,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("OTPs");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.Permission", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.Permission", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("CanCreate")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("CanDelete")
                         .HasColumnType("bit");
@@ -593,6 +597,9 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("CanRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("CanUpdate")
                         .HasColumnType("bit");
 
                     b.Property<bool>("CanWrite")
@@ -636,7 +643,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("Permissions");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.UserStore", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.UserStore", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
@@ -658,10 +665,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("UserStores");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CompanyId")
                         .IsRequired()
@@ -676,9 +686,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<string>("DefaultScreenId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("DefaultShortcutBar")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -691,12 +698,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
                     b.Property<decimal>("OpenCash")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTimeOffset?>("SessionTimeIn")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("SessionTimeOut")
-                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("StoreOfOperationId")
                         .IsRequired()
@@ -727,7 +728,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("AssignedDrawers");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.DefaultScreen", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -777,7 +778,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("DefaultScreens");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.Drawer", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.Drawer", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -804,6 +805,10 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<string>("DrawerGroupId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -837,7 +842,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("Drawers");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.DrawerGroup", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -868,6 +873,11 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("nvarchar(128)");
 
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
+
                     b.Property<string>("StoreOfOperationId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -887,7 +897,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("DrawerGroups");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.Terminal", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.Terminal", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -937,10 +947,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("Terminals");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Columns")
+                        .HasColumnType("int");
 
                     b.Property<string>("CompanyId")
                         .IsRequired()
@@ -952,9 +965,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<DateTime?>("CreatedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DefaultFontSize")
-                        .HasColumnType("int");
-
                     b.Property<string>("DeletedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -965,10 +975,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<int>("GridColumns")
-                        .HasColumnType("int");
-
-                    b.Property<int>("GridRows")
+                    b.Property<int>("Rows")
                         .HasColumnType("int");
 
                     b.Property<string>("ScreenName")
@@ -995,7 +1002,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("TouchScreens");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -1009,9 +1016,6 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<int>("Column")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ColumnSpan")
                         .HasColumnType("int");
 
                     b.Property<string>("CompanyId")
@@ -1030,18 +1034,12 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("FontSize")
-                        .HasColumnType("int");
-
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<bool>("IsDefaultImage")
+                    b.Property<bool>("IsVerified")
                         .HasColumnType("bit");
-
-                    b.Property<string>("ItemId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ItemName")
                         .IsRequired()
@@ -1051,14 +1049,8 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Property<int>("Row")
                         .HasColumnType("int");
 
-                    b.Property<int>("RowSpan")
-                        .HasColumnType("int");
-
                     b.Property<int>("Shape")
                         .HasColumnType("int");
-
-                    b.Property<bool>("ShowImage")
-                        .HasColumnType("bit");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("int");
@@ -1080,6 +1072,12 @@ namespace AstrolPOSAPI.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("VerificationAttempts")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("VerifiedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
@@ -1201,26 +1199,26 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.GeneralSettings", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithOne()
-                        .HasForeignKey("AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings", "CompanyId")
+                        .HasForeignKey("AstrolPOSAPI.Domain.Entities.Core.GeneralSettings", "CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.Store", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.Store", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany("Stores")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.StoreType", "StoreType")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.StoreType", "StoreType")
                         .WithMany()
                         .HasForeignKey("StoreTypeId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1230,15 +1228,14 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreType");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict);
@@ -1248,9 +1245,9 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreOfOperation");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.OTP", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.OTP", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1259,14 +1256,14 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.Permission", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.Permission", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppRole", "Role")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppRole", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -1276,15 +1273,15 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.UserStore", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.UserStore", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "Store")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "Store")
                         .WithMany()
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
                         .WithMany("UserStores")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1295,32 +1292,32 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.AssignedDrawer", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen", "DefaultScreen")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.DefaultScreen", "DefaultScreen")
                         .WithMany()
                         .HasForeignKey("DefaultScreenId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.Drawer", "Drawer")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.Drawer", "Drawer")
                         .WithMany()
                         .HasForeignKey("DrawerId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1337,15 +1334,15 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.DefaultScreen", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1356,32 +1353,32 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreOfOperation");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.Drawer", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.Drawer", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen", "DefaultScreen")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.DefaultScreen", "DefaultScreen")
                         .WithMany()
                         .HasForeignKey("DefaultScreenId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup", "DrawerGroup")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.DrawerGroup", "DrawerGroup")
                         .WithMany()
                         .HasForeignKey("DrawerGroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.Terminal", "Terminal")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.Terminal", "Terminal")
                         .WithMany()
                         .HasForeignKey("TerminalId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1398,15 +1395,15 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("Terminal");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.DrawerGroup", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.DrawerGroup", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1417,15 +1414,15 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreOfOperation");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.Terminal", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.Terminal", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1436,15 +1433,15 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreOfOperation");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -1455,21 +1452,21 @@ namespace AstrolPOSAPI.Persistence.Migrations
                     b.Navigation("StoreOfOperation");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.TouchScreenButton", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Company", "Company")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Company", "Company")
                         .WithMany()
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Core.Store", "StoreOfOperation")
                         .WithMany()
                         .HasForeignKey("StoreOfOperationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.POS.TouchScreen", "TouchScreen")
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.POS.TouchScreen", "TouchScreen")
                         .WithMany("Buttons")
                         .HasForeignKey("TouchScreenId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1484,7 +1481,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppRole", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1493,7 +1490,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1502,7 +1499,7 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1511,13 +1508,13 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppRole", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1526,24 +1523,24 @@ namespace AstrolPOSAPI.Persistence.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", null)
+                    b.HasOne("AstrolPOSAPI.Domain.Entities.Identity.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Core.Company", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Core.Company", b =>
                 {
                     b.Navigation("Stores");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.Identity.AppUser", b =>
                 {
                     b.Navigation("UserStores");
                 });
 
-            modelBuilder.Entity("AtsrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
+            modelBuilder.Entity("AstrolPOSAPI.Domain.Entities.POS.TouchScreen", b =>
                 {
                     b.Navigation("Buttons");
                 });

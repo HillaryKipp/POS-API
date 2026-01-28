@@ -23,7 +23,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Queries
 
         public async Task<DefaultScreenDto> Handle(GetDefaultScreenByIdQuery request, CancellationToken cancellationToken)
         {
-            var defaultScreen = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
+            var defaultScreen = await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().GetByIdAsync(request.Id);
 
             if (defaultScreen == null || defaultScreen.DeletedDate != null)
                 throw new KeyNotFoundException($"DefaultScreen with ID {request.Id} not found");

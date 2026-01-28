@@ -19,13 +19,13 @@ namespace AstrolPOSAPI.Application.Features.Permission.Commands
 
         public async Task<Unit> Handle(DeletePermissionCommand request, CancellationToken cancellationToken)
         {
-            var permission = await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.Permission>()
+            var permission = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Identity.Permission>()
                 .GetByIdAsync(request.Id);
 
             if (permission == null)
                 throw new KeyNotFoundException($"Permission with ID {request.Id} not found");
 
-            await _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.Permission>().DeleteAsync(permission);
+            await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Identity.Permission>().DeleteAsync(permission);
             await _unitOfWork.Save(cancellationToken);
 
             return Unit.Value;

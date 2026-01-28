@@ -7,9 +7,9 @@ namespace AstrolPOSAPI.Application.Features.GeneralSettings
     {
         public GeneralSettingsMappingProfile()
         {
-            CreateMap<AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings, GeneralSettingsDto>();
-            CreateMap<CreateGeneralSettingsDto, AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>();
-            CreateMap<UpdateGeneralSettingsDto, AtsrolPOSAPI.Domain.Entities.Core.GeneralSettings>();
+            CreateMap<Domain.Entities.Core.GeneralSettings, GeneralSettingsDto>();
+            CreateMap<CreateGeneralSettingsDto, Domain.Entities.Core.GeneralSettings>();
+            CreateMap<UpdateGeneralSettingsDto, Domain.Entities.Core.GeneralSettings>();
         }
     }
 }

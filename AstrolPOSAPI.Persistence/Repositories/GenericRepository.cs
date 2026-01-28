@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Persistence.Contexts;
-using AtsrolPOSAPI.Domain.Common;
+using AstrolPOSAPI.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Persistence.Repositories
@@ -28,7 +28,7 @@ namespace AstrolPOSAPI.Persistence.Repositories
                 .ToListAsync();
         }
 
-        public async Task<T> GetByIdAsync(string id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             return await _dbContext.Set<T>().FindAsync(id);
         }
@@ -41,8 +41,11 @@ namespace AstrolPOSAPI.Persistence.Repositories
 
         public Task UpdateAsync(T entity)
         {
-            T exist = _dbContext.Set<T>().Find(entity.Id);
-            _dbContext.Entry(exist).CurrentValues.SetValues(entity);
+            T? exist = _dbContext.Set<T>().Find(entity.Id);
+            if (exist != null)
+            {
+                _dbContext.Entry(exist).CurrentValues.SetValues(entity);
+            }
             return Task.CompletedTask;
         }
 

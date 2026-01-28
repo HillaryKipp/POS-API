@@ -1,4 +1,4 @@
-﻿using AtsrolPOSAPI.Domain.Common.Interfaces;
+using AstrolPOSAPI.Domain.Common.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace AstrolPOSAPI.Application.Interfaces.Repositories
     {
         IQueryable<T> Entities { get; }
 
-        Task<T> GetByIdAsync(string id);
+        Task<T?> GetByIdAsync(string id);
         Task<List<T>> GetAllAsync();
         Task<T> AddAsync(T entity);
         Task UpdateAsync(T entity);

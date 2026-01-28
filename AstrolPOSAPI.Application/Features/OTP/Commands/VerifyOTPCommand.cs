@@ -24,10 +24,10 @@ namespace AstrolPOSAPI.Application.Features.OTP.Commands
 
         public async Task<bool> Handle(VerifyOTPCommand request, CancellationToken cancellationToken)
         {
-            var repo = _unitOfWork.Repository<AtsrolPOSAPI.Domain.Entities.Identity.OTP>();
+            var repo = _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.Identity.OTP>();
             var otp = await repo.Entities
                 .Where(o => o.PhoneNumber == request.PhoneNumber && o.Purpose == request.Purpose && !o.IsVerified)
-                .OrderByDescending(o => o.CreatedAt)
+                .OrderByDescending(o => o.CreatedDate)
                 .FirstOrDefaultAsync(cancellationToken);
 
             if (otp == null)
