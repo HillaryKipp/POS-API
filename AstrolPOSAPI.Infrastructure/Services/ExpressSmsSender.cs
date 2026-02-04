@@ -215,10 +215,10 @@ namespace AstrolPOSAPI.Infrastructure.Services
         private class ExpressSmsSuccessResponse
         {
             [JsonPropertyName("success")]
-            public string Success { get; set; }
+            public string? Success { get; set; }
 
             [JsonPropertyName("message")]
-            public string Message { get; set; }
+            public string? Message { get; set; }
 
             [JsonPropertyName("balance")]
             public int Balance { get; set; }

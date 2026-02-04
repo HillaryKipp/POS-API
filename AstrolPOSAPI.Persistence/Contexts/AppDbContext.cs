@@ -28,6 +28,14 @@ namespace AstrolPOSAPI.Persistence.Contexts
         public DbSet<TouchScreen> TouchScreens => Set<TouchScreen>();
         public DbSet<TouchScreenButton> TouchScreenButtons => Set<TouchScreenButton>();
 
+        // POS Item and Sales
+        public DbSet<ItemCategory> ItemCategories => Set<ItemCategory>();
+        public DbSet<Item> Items => Set<Item>();
+        public DbSet<SalesOrder> SalesOrders => Set<SalesOrder>();
+        public DbSet<SalesOrderLine> SalesOrderLines => Set<SalesOrderLine>();
+        public DbSet<Payment> Payments => Set<Payment>();
+        public DbSet<Receipt> Receipts => Set<Receipt>();
+
         // Identity/Auth related
 
         public DbSet<Permission> Permissions => Set<Permission>();
@@ -437,6 +445,183 @@ namespace AstrolPOSAPI.Persistence.Contexts
 
                 // Index on CompanyId for quick lookups
                 e.HasIndex(gs => gs.CompanyId).IsUnique();
+            });
+
+            // ItemCategory configuration
+            builder.Entity<ItemCategory>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Name).IsRequired().HasMaxLength(128);
+                e.Property(p => p.Description).HasMaxLength(500);
+                e.Property(p => p.CompanyId).IsRequired();
+                e.Property(p => p.StoreOfOperationId).IsRequired();
+
+                e.HasOne(c => c.ParentCategory)
+                    .WithMany()
+                    .HasForeignKey(c => c.ParentCategoryId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(c => c.Company)
+                    .WithMany()
+                    .HasForeignKey(c => c.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(c => c.StoreOfOperation)
+                    .WithMany()
+                    .HasForeignKey(c => c.StoreOfOperationId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasQueryFilter(c => c.DeletedDate == null);
+                e.HasIndex(c => new { c.CompanyId, c.Code }).IsUnique();
+            });
+
+            // Item configuration
+            builder.Entity<Item>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Name).IsRequired().HasMaxLength(128);
+                e.Property(p => p.Description).HasMaxLength(500);
+                e.Property(p => p.UnitOfMeasure).HasMaxLength(16);
+                e.Property(p => p.UnitPrice).HasPrecision(18, 4);
+                e.Property(p => p.CostPrice).HasPrecision(18, 4);
+                e.Property(p => p.QuantityOnHand).HasPrecision(18, 4);
+                e.Property(p => p.ReorderLevel).HasPrecision(18, 4);
+                e.Property(p => p.TaxRate).HasPrecision(5, 2);
+                e.Property(p => p.Barcode).HasMaxLength(100);
+                e.Property(p => p.ImageUrl).HasMaxLength(512);
+                e.Property(p => p.CompanyId).IsRequired();
+                e.Property(p => p.StoreOfOperationId).IsRequired();
+
+                e.HasOne(i => i.Category)
+                    .WithMany(c => c.Items)
+                    .HasForeignKey(i => i.CategoryId)
+                    .OnDelete(DeleteBehavior.SetNull);
+
+                e.HasOne(i => i.Company)
+                    .WithMany()
+                    .HasForeignKey(i => i.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(i => i.StoreOfOperation)
+                    .WithMany()
+                    .HasForeignKey(i => i.StoreOfOperationId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasQueryFilter(i => i.DeletedDate == null);
+                e.HasIndex(i => new { i.CompanyId, i.Code }).IsUnique();
+                e.HasIndex(i => i.Barcode);
+            });
+
+            // SalesOrder configuration
+            builder.Entity<SalesOrder>(e =>
+            {
+                e.Property(p => p.OrderNo).IsRequired().HasMaxLength(50);
+                e.Property(p => p.CustomerName).HasMaxLength(256);
+                e.Property(p => p.Status).HasConversion<int>();
+                e.Property(p => p.Subtotal).HasPrecision(18, 4);
+                e.Property(p => p.DiscountAmount).HasPrecision(18, 4);
+                e.Property(p => p.TaxAmount).HasPrecision(18, 4);
+                e.Property(p => p.TotalAmount).HasPrecision(18, 4);
+                e.Property(p => p.AmountPaid).HasPrecision(18, 4);
+                e.Property(p => p.ChangeGiven).HasPrecision(18, 4);
+                e.Property(p => p.CompanyId).IsRequired();
+                e.Property(p => p.StoreOfOperationId).IsRequired();
+                e.Property(p => p.CashierId).IsRequired();
+                e.Property(p => p.DrawerId).IsRequired();
+
+                e.HasOne(o => o.Cashier)
+                    .WithMany()
+                    .HasForeignKey(o => o.CashierId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(o => o.Drawer)
+                    .WithMany()
+                    .HasForeignKey(o => o.DrawerId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(o => o.Company)
+                    .WithMany()
+                    .HasForeignKey(o => o.CompanyId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasOne(o => o.StoreOfOperation)
+                    .WithMany()
+                    .HasForeignKey(o => o.StoreOfOperationId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasMany(o => o.Lines)
+                    .WithOne(l => l.SalesOrder)
+                    .HasForeignKey(l => l.SalesOrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasMany(o => o.Payments)
+                    .WithOne(p => p.SalesOrder)
+                    .HasForeignKey(p => p.SalesOrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasQueryFilter(o => o.DeletedDate == null);
+                e.HasIndex(o => o.OrderNo).IsUnique();
+                e.HasIndex(o => new { o.DrawerId, o.Status });
+                e.HasIndex(o => o.OrderDate);
+            });
+
+            // SalesOrderLine configuration
+            builder.Entity<SalesOrderLine>(e =>
+            {
+                e.Property(p => p.ItemCode).IsRequired().HasMaxLength(32);
+                e.Property(p => p.ItemName).IsRequired().HasMaxLength(128);
+                e.Property(p => p.UnitOfMeasure).HasMaxLength(16);
+                e.Property(p => p.Quantity).HasPrecision(18, 4);
+                e.Property(p => p.UnitPrice).HasPrecision(18, 4);
+                e.Property(p => p.DiscountAmount).HasPrecision(18, 4);
+                e.Property(p => p.TaxRate).HasPrecision(5, 2);
+                e.Property(p => p.TaxAmount).HasPrecision(18, 4);
+                e.Property(p => p.LineTotal).HasPrecision(18, 4);
+                e.Property(p => p.SalesOrderId).IsRequired();
+                e.Property(p => p.ItemId).IsRequired();
+
+                e.HasOne(l => l.Item)
+                    .WithMany()
+                    .HasForeignKey(l => l.ItemId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                e.HasQueryFilter(l => l.DeletedDate == null);
+            });
+
+            // Payment configuration
+            builder.Entity<Payment>(e =>
+            {
+                e.Property(p => p.PaymentMethod).HasConversion<int>();
+                e.Property(p => p.Amount).HasPrecision(18, 4);
+                e.Property(p => p.ReferenceNo).HasMaxLength(100);
+                e.Property(p => p.PhoneNumber).HasMaxLength(20);
+                e.Property(p => p.CardLastFour).HasMaxLength(4);
+                e.Property(p => p.Status).HasConversion<int>();
+                e.Property(p => p.ResponseMessage).HasMaxLength(500);
+                e.Property(p => p.SalesOrderId).IsRequired();
+
+                e.HasQueryFilter(p => p.DeletedDate == null);
+                e.HasIndex(p => p.ReferenceNo);
+            });
+
+            // Receipt configuration
+            builder.Entity<Receipt>(e =>
+            {
+                e.Property(p => p.ReceiptNo).IsRequired().HasMaxLength(50);
+                e.Property(p => p.TotalAmount).HasPrecision(18, 4);
+                e.Property(p => p.AmountPaid).HasPrecision(18, 4);
+                e.Property(p => p.ChangeGiven).HasPrecision(18, 4);
+                e.Property(p => p.EmailAddress).HasMaxLength(256);
+                e.Property(p => p.PhoneNumber).HasMaxLength(20);
+                e.Property(p => p.SalesOrderId).IsRequired();
+
+                e.HasOne(r => r.SalesOrder)
+                    .WithMany()
+                    .HasForeignKey(r => r.SalesOrderId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                e.HasQueryFilter(r => r.DeletedDate == null);
+                e.HasIndex(r => r.ReceiptNo).IsUnique();
             });
         }
 

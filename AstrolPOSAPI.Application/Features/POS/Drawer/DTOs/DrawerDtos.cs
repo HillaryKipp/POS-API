@@ -6,6 +6,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.DTOs
     public class DrawerDto
     {
         public string Id { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string DrawerGroupId { get; set; } = default!;
         public string? DefaultScreenId { get; set; }
         public string TerminalId { get; set; } = default!;

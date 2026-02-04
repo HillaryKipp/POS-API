@@ -1,5 +1,8 @@
+using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.CreateAssignedDrawer;
+using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.UpdateAssignedDrawer;
 using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs;
 using AutoMapper;
+using AssignedDrawerEntity = AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer;
 
 namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer
 {
@@ -7,9 +10,12 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer
     {
         public AssignedDrawerMappingProfile()
         {
-            CreateMap<AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer, AssignedDrawerDto>().ReverseMap();
-            CreateMap<CreateAssignedDrawerDto, AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
-            CreateMap<UpdateAssignedDrawerDto, AstrolPOSAPI.Domain.Entities.POS.AssignedDrawer>();
+            CreateMap<AssignedDrawerEntity, AssignedDrawerDto>().ReverseMap();
+            CreateMap<CreateAssignedDrawerCommand, AssignedDrawerEntity>();
+            CreateMap<UpdateAssignedDrawerCommand, AssignedDrawerEntity>();
+
+            CreateMap<CreateAssignedDrawerDto, AssignedDrawerEntity>();
+            CreateMap<UpdateAssignedDrawerDto, AssignedDrawerEntity>();
         }
     }
 }

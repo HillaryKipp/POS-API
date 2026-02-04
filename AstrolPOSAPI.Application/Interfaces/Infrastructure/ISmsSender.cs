@@ -10,8 +10,8 @@ namespace AstrolPOSAPI.Application.Interfaces.Infrastructure
 
     public class SmsSendResponse
     {
-        public string Success { get; set; }
-        public string Message { get; set; }
+        public required string Success { get; set; }
+        public required string Message { get; set; }
         public int? Balance { get; set; }
         public string? DeliveryCode { get; set; }
     }

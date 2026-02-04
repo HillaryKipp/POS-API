@@ -102,7 +102,7 @@ namespace AstrolPOSAPI.Application.Features.User.Commands.CreateUser
             // Generate default password if not provided
             var password = !string.IsNullOrEmpty(request.Password) 
                 ? request.Password 
-                : $"Pass@{empNo}"; // Default pattern: Pass + EmpNo (e.g. Pass@EMP001)
+                : $"Pass@123."; // Default pattern: Pass + EmpNo (e.g. Pass@EMP001)
 
             var result = await _userManager.CreateAsync(user, password);
 

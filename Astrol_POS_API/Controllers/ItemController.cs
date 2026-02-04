@@ -1,7 +1,7 @@
-using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.CreateAssignedDrawer;
-using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.DeleteAssignedDrawer;
-using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Commands.UpdateAssignedDrawer;
-using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries;
+using AstrolPOSAPI.Application.Features.POS.Item.Commands.CreateItem;
+using AstrolPOSAPI.Application.Features.POS.Item.Commands.DeleteItem;
+using AstrolPOSAPI.Application.Features.POS.Item.Commands.UpdateItem;
+using AstrolPOSAPI.Application.Features.POS.Item.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,36 +11,44 @@ namespace Astrol_POS_API.WebAPI.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Authorize]
-    public class AssignedDrawerController : ControllerBase
+    public class ItemController : ControllerBase
     {
         private readonly IMediator _mediator;
 
-        public AssignedDrawerController(IMediator mediator)
+        public ItemController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Get all items with optional filtering
+        /// </summary>
         [HttpGet]
         public async Task<IActionResult> GetAll(
             [FromQuery] string? companyId,
             [FromQuery] string? storeOfOperationId,
-            [FromQuery] string? userId,
-            [FromQuery] string? drawerId)
+            [FromQuery] string? categoryId,
+            [FromQuery] bool? isActive,
+            [FromQuery] string? searchTerm)
         {
-            var query = new GetAllAssignedDrawersQuery
+            var query = new GetAllItemsQuery
             {
                 CompanyId = companyId,
                 StoreOfOperationId = storeOfOperationId,
-                UserId = userId,
-                DrawerId = drawerId
+                CategoryId = categoryId,
+                IsActive = isActive,
+                SearchTerm = searchTerm
             };
             return Ok(await _mediator.Send(query));
         }
 
+        /// <summary>
+        /// Get item by ID
+        /// </summary>
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
-            var query = new GetAssignedDrawerByIdQuery { Id = id };
+            var query = new GetItemByIdQuery { Id = id };
             try
             {
                 var result = await _mediator.Send(query);
@@ -52,15 +60,21 @@ namespace Astrol_POS_API.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Create a new item
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateAssignedDrawerCommand command)
+        public async Task<IActionResult> Create([FromBody] CreateItemCommand command)
         {
             var result = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
         }
 
+        /// <summary>
+        /// Update an existing item
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(string id, [FromBody] UpdateAssignedDrawerCommand command)
+        public async Task<IActionResult> Update(string id, [FromBody] UpdateItemCommand command)
         {
             if (id != command.Id)
                 return BadRequest("ID mismatch");
@@ -76,10 +90,13 @@ namespace Astrol_POS_API.WebAPI.Controllers
             }
         }
 
+        /// <summary>
+        /// Delete an item (soft delete)
+        /// </summary>
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(string id)
         {
-            var command = new DeleteAssignedDrawerCommand { Id = id };
+            var command = new DeleteItemCommand { Id = id };
             try
             {
                 await _mediator.Send(command);

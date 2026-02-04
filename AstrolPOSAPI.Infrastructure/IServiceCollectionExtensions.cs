@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using AstrolPOSAPI.Application.Interfaces.Services;
+using AstrolPOSAPI.Infrastructure.Services;
+using AstrolPOSAPI.Shared.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 
 namespace AstrolPOSAPI.Infrastructure
@@ -39,6 +36,25 @@ namespace AstrolPOSAPI.Infrastructure
             if (bypassSsl)
             {
                 httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
+                });
+            }
+
+            // M-Pesa Service
+            services.Configure<MpesaSettings>(configuration.GetSection(MpesaSettings.SectionName));
+            services.AddTransient<IMpesaService, MpesaService>();
+
+            var mpesaHttpClientBuilder = services.AddHttpClient<IMpesaService, MpesaService>((serviceProvider, client) =>
+            {
+                var settings = configuration.GetSection(MpesaSettings.SectionName).Get<MpesaSettings>();
+                client.BaseAddress = new Uri(settings?.BaseUrl ?? "https://sandbox.safaricom.co.ke");
+            });
+
+            // Bypass SSL for M-Pesa if in sandbox
+            if (configuration.GetValue<string>("Mpesa:Environment") == "sandbox")
+            {
+                mpesaHttpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
                 {
                     ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => true
                 });
