@@ -2,6 +2,7 @@ using AstrolPOSAPI.Application.Features.POS.DrawerGroup.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Queries
 {
@@ -24,9 +25,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Queries
 
         public async Task<List<DrawerGroupDto>> Handle(GetAllDrawerGroupsQuery request, CancellationToken cancellationToken)
         {
-            var allDrawerGroups = await _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().GetAllAsync();
-
-            var query = allDrawerGroups.AsQueryable();
+            var query = _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.DrawerGroup>().Entities
+                .Include(x => x.Company)
+                .Include(x => x.StoreOfOperation)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))
             {
@@ -38,10 +40,8 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Queries
                 query = query.Where(dg => dg.StoreOfOperationId == request.StoreOfOperationId);
             }
 
-            // Exclude deleted (already handled by global filter but double checking logic usually good, though repository handles it)
-            // query = query.Where(dg => dg.DeletedDate == null);
-
-            return _mapper.Map<List<DrawerGroupDto>>(query.ToList());
+            var list = await query.ToListAsync(cancellationToken);
+            return _mapper.Map<List<DrawerGroupDto>>(list);
         }
     }
 }

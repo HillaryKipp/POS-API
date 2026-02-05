@@ -2,6 +2,7 @@ using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries
 {
@@ -23,7 +24,13 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries
 
         public async Task<AssignedDrawerDto> Handle(GetAssignedDrawerByIdQuery request, CancellationToken cancellationToken)
         {
-            var assignedDrawer = await _unitOfWork.Repository<Domain.Entities.POS.AssignedDrawer>().GetByIdAsync(request.Id);
+            var assignedDrawer = await _unitOfWork.Repository<Domain.Entities.POS.AssignedDrawer>().Entities
+                .Include(x => x.Company)
+                .Include(x => x.StoreOfOperation)
+                .Include(x => x.Drawer)
+                .Include(x => x.DefaultScreen)
+                .Include(x => x.User)
+                .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken);
 
             if (assignedDrawer == null || assignedDrawer.DeletedDate != null)
                 throw new KeyNotFoundException($"AssignedDrawer with ID {request.Id} not found");

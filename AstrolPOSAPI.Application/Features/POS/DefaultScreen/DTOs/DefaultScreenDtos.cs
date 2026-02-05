@@ -6,9 +6,12 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.DTOs
     {
         public string Id { get; set; } = default!;
         public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CompanyId { get; set; } = default!;
+        public string? CompanyName { get; set; }
         public string StoreOfOperationId { get; set; } = default!;
+        public string? StoreOfOperationName { get; set; }
     }
 
     public class CreateDefaultScreenDto
@@ -16,6 +19,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.DTOs
         [Required]
         [MaxLength(32)]
         public string Code { get; set; } = default!;
+
+        [Required]
+        [MaxLength(128)]
+        public string Name { get; set; } = default!;
 
         [Required]
         [MaxLength(128)]
@@ -36,6 +43,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.DTOs
         [Required]
         [MaxLength(32)]
         public string Code { get; set; } = default!;
+
+        [Required]
+        [MaxLength(128)]
+        public string Name { get; set; } = default!;
 
         [Required]
         [MaxLength(128)]

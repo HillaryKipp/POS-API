@@ -10,6 +10,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.UpdateDrawer
     public class UpdateDrawerCommand : IRequest<DrawerDto>
     {
         public string Id { get; set; } = default!;
+        public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string DrawerGroupId { get; set; } = default!;
         public string? DefaultScreenId { get; set; }
         public string TerminalId { get; set; } = default!;
@@ -23,6 +25,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Commands.UpdateDrawer
         public UpdateDrawerCommandValidator()
         {
             RuleFor(p => p.Id).NotEmpty();
+            RuleFor(p => p.Code).NotEmpty().MaximumLength(32);
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(128);
             RuleFor(p => p.DrawerGroupId).NotEmpty();
             RuleFor(p => p.TerminalId).NotEmpty();
             RuleFor(p => p.CompanyId).NotEmpty();

@@ -5,6 +5,7 @@ namespace AstrolPOSAPI.Domain.Entities.POS
 {
     public class TouchScreen : BaseAuditableEntity
     {
+        public string Code { get; set; } = string.Empty;
         public string ScreenName { get; set; } = string.Empty;
         public string? Description { get; set; }
         public int Rows { get; set; }

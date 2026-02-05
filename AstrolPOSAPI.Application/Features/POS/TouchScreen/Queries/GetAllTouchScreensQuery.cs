@@ -26,8 +26,13 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
 
         public async Task<List<TouchScreenDto>> Handle(GetAllTouchScreensQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().GetAllAsync();
-            var query = items.AsQueryable();
+            var query = _unitOfWork.Repository<Domain.Entities.POS.TouchScreen>().Entities
+                .Include(x => x.Company)
+                .Include(x => x.StoreOfOperation)
+                .AsQueryable();
+
+            if (request.IncludeButtons)
+                query = query.Include(x => x.Buttons);
 
             if (!string.IsNullOrEmpty(request.CompanyId))
                 query = query.Where(x => x.CompanyId == request.CompanyId);
@@ -35,7 +40,8 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Queries
             if (!string.IsNullOrEmpty(request.StoreOfOperationId))
                 query = query.Where(x => x.StoreOfOperationId == request.StoreOfOperationId);
 
-            return _mapper.Map<List<TouchScreenDto>>(query.ToList());
+            var list = await query.ToListAsync(cancellationToken);
+            return _mapper.Map<List<TouchScreenDto>>(list);
         }
     }
 }

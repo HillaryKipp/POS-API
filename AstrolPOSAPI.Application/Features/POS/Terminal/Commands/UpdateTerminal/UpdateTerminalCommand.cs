@@ -10,6 +10,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.UpdateTerminal
     {
         public string Id { get; set; } = default!;
         public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CompanyId { get; set; } = default!;
         public string StoreOfOperationId { get; set; } = default!;
@@ -21,6 +22,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.UpdateTerminal
         {
             RuleFor(p => p.Id).NotEmpty();
             RuleFor(p => p.Code).NotEmpty().MaximumLength(32);
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
             RuleFor(p => p.Description).NotEmpty().MaximumLength(128);
             RuleFor(p => p.CompanyId).NotEmpty();
             RuleFor(p => p.StoreOfOperationId).NotEmpty();

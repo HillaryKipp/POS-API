@@ -2,6 +2,7 @@ using AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries
 {
@@ -26,8 +27,13 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries
 
         public async Task<List<AssignedDrawerDto>> Handle(GetAllAssignedDrawersQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<Domain.Entities.POS.AssignedDrawer>().GetAllAsync();
-            var query = items.AsQueryable();
+            var query = _unitOfWork.Repository<Domain.Entities.POS.AssignedDrawer>().Entities
+                .Include(x => x.Company)
+                .Include(x => x.StoreOfOperation)
+                .Include(x => x.Drawer)
+                .Include(x => x.DefaultScreen)
+                .Include(x => x.User)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))
                 query = query.Where(x => x.CompanyId == request.CompanyId);
@@ -41,7 +47,8 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.Queries
             if (!string.IsNullOrEmpty(request.DrawerId))
                 query = query.Where(x => x.DrawerId == request.DrawerId);
 
-            return _mapper.Map<List<AssignedDrawerDto>>(query.ToList());
+            var list = await query.ToListAsync(cancellationToken);
+            return _mapper.Map<List<AssignedDrawerDto>>(list);
         }
     }
 }

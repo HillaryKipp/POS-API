@@ -8,6 +8,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.CreateTouch
 {
     public class CreateTouchScreenCommand : IRequest<TouchScreenDto>
     {
+        public string Code { get; set; } = default!;
         public string ScreenName { get; set; } = default!;
         public string? Description { get; set; }
         public int GridRows { get; set; } = 2;
@@ -21,6 +22,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.CreateTouch
     {
         public CreateTouchScreenCommandValidator()
         {
+            RuleFor(p => p.Code).NotEmpty().MaximumLength(32);
             RuleFor(p => p.ScreenName).NotEmpty().MaximumLength(100);
             RuleFor(p => p.Description).MaximumLength(500);
             RuleFor(p => p.GridRows).InclusiveBetween(1, 10);

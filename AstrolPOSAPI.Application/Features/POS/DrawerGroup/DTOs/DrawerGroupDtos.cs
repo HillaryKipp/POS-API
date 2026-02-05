@@ -9,7 +9,9 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.DTOs
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CompanyId { get; set; } = default!;
+        public string? CompanyName { get; set; }
         public string StoreOfOperationId { get; set; } = default!;
+        public string? StoreOfOperationName { get; set; }
     }
 
     public class CreateDrawerGroupDto
@@ -17,6 +19,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.DTOs
         [Required]
         [MaxLength(32)]
         public string Code { get; set; } = default!;
+
+        [Required]
+        [MaxLength(64)]
+        public string Name { get; set; } = default!;
 
         [Required]
         [MaxLength(128)]
@@ -37,6 +43,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.DTOs
         [Required]
         [MaxLength(32)]
         public string Code { get; set; } = default!;
+
+        [Required]
+        [MaxLength(64)]
+        public string Name { get; set; } = default!;
 
         [Required]
         [MaxLength(128)]

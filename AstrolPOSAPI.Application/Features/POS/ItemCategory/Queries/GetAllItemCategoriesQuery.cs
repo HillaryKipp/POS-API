@@ -1,36 +1,34 @@
-using AstrolPOSAPI.Application.Features.POS.Drawer.DTOs;
+using AstrolPOSAPI.Application.Features.POS.ItemCategory.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace AstrolPOSAPI.Application.Features.POS.Drawer.Queries
+namespace AstrolPOSAPI.Application.Features.POS.ItemCategory.Queries
 {
-    public class GetAllDrawersQuery : IRequest<List<DrawerDto>>
+    public class GetAllItemCategoriesQuery : IRequest<IEnumerable<ItemCategoryDto>>
     {
         public string? CompanyId { get; set; }
         public string? StoreOfOperationId { get; set; }
     }
 
-    public class GetAllDrawersQueryHandler : IRequestHandler<GetAllDrawersQuery, List<DrawerDto>>
+    public class GetAllItemCategoriesQueryHandler : IRequestHandler<GetAllItemCategoriesQuery, IEnumerable<ItemCategoryDto>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
-        public GetAllDrawersQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+        public GetAllItemCategoriesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
-        public async Task<List<DrawerDto>> Handle(GetAllDrawersQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<ItemCategoryDto>> Handle(GetAllItemCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var query = _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.Drawer>().Entities
+            var query = _unitOfWork.Repository<AstrolPOSAPI.Domain.Entities.POS.ItemCategory>().Entities
                 .Include(x => x.Company)
                 .Include(x => x.StoreOfOperation)
-                .Include(x => x.DrawerGroup)
-                .Include(x => x.Terminal)
-                .Include(x => x.DefaultScreen)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))
@@ -39,8 +37,9 @@ namespace AstrolPOSAPI.Application.Features.POS.Drawer.Queries
             if (!string.IsNullOrEmpty(request.StoreOfOperationId))
                 query = query.Where(x => x.StoreOfOperationId == request.StoreOfOperationId);
 
+
             var list = await query.ToListAsync(cancellationToken);
-            return _mapper.Map<List<DrawerDto>>(list);
+            return _mapper.Map<IEnumerable<ItemCategoryDto>>(list);
         }
     }
 }

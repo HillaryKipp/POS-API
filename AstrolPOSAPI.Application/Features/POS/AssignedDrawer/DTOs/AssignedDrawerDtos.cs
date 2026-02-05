@@ -13,7 +13,12 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs
         public DateTimeOffset? SessionTimeOut { get; set; }
         public decimal OpenCash { get; set; }
         public string CompanyId { get; set; } = default!;
+        public string? CompanyName { get; set; }
         public string StoreOfOperationId { get; set; } = default!;
+        public string? StoreOfOperationName { get; set; }
+        public string? DrawerName { get; set; }
+        public string? DefaultScreenName { get; set; }
+        public string? UserName { get; set; }
     }
 
     public class CreateAssignedDrawerDto

@@ -5,6 +5,7 @@ namespace AstrolPOSAPI.Domain.Entities.POS
 {
     public class Drawer : BaseAuditableEntity
     {
+        public string Code { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public DrawerStatus Status { get; set; }
         

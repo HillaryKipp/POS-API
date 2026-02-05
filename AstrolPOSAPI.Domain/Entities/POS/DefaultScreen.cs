@@ -6,6 +6,7 @@ namespace AstrolPOSAPI.Domain.Entities.POS
     public class DefaultScreen : BaseAuditableEntity
     {
         public string Code { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         
         public string CompanyId { get; set; } = string.Empty;

@@ -9,6 +9,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.UpdateTouch
     public class UpdateTouchScreenCommand : IRequest<TouchScreenDto>
     {
         public string Id { get; set; } = default!;
+        public string Code { get; set; } = default!;
         public string ScreenName { get; set; } = default!;
         public string? Description { get; set; }
         public int GridRows { get; set; }
@@ -23,6 +24,7 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.Commands.UpdateTouch
         public UpdateTouchScreenCommandValidator()
         {
             RuleFor(p => p.Id).NotEmpty();
+            RuleFor(p => p.Code).NotEmpty().MaximumLength(32);
             RuleFor(p => p.ScreenName).NotEmpty().MaximumLength(100);
             RuleFor(p => p.Description).MaximumLength(500);
             RuleFor(p => p.GridRows).InclusiveBetween(1, 10);

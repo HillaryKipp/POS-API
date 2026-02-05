@@ -2,6 +2,7 @@ using AstrolPOSAPI.Application.Features.POS.DefaultScreen.DTOs;
 using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Queries
 {
@@ -24,8 +25,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Queries
 
         public async Task<List<DefaultScreenDto>> Handle(GetAllDefaultScreensQuery request, CancellationToken cancellationToken)
         {
-            var items = await _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().GetAllAsync();
-            var query = items.AsQueryable();
+            var query = _unitOfWork.Repository<Domain.Entities.POS.DefaultScreen>().Entities
+                .Include(x => x.Company)
+                .Include(x => x.StoreOfOperation)
+                .AsQueryable();
 
             if (!string.IsNullOrEmpty(request.CompanyId))
                 query = query.Where(x => x.CompanyId == request.CompanyId);
@@ -33,7 +36,8 @@ namespace AstrolPOSAPI.Application.Features.POS.DefaultScreen.Queries
             if (!string.IsNullOrEmpty(request.StoreOfOperationId))
                 query = query.Where(x => x.StoreOfOperationId == request.StoreOfOperationId);
 
-            return _mapper.Map<List<DefaultScreenDto>>(query.ToList());
+            var list = await query.ToListAsync(cancellationToken);
+            return _mapper.Map<List<DefaultScreenDto>>(list);
         }
     }
 }

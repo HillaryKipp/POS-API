@@ -9,6 +9,7 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.CreateDrawe
     public class CreateDrawerGroupCommand : IRequest<DrawerGroupDto>
     {
         public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CompanyId { get; set; } = default!;
         public string StoreOfOperationId { get; set; } = default!;
@@ -21,6 +22,10 @@ namespace AstrolPOSAPI.Application.Features.POS.DrawerGroup.Commands.CreateDrawe
             RuleFor(p => p.Code)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .MaximumLength(32).WithMessage("{PropertyName} must not exceed 32 characters.");
+
+            RuleFor(p => p.Name)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .MaximumLength(64).WithMessage("{PropertyName} must not exceed 64 characters.");
 
             RuleFor(p => p.Description)
                 .NotEmpty().WithMessage("{PropertyName} is required.")

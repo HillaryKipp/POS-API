@@ -7,8 +7,13 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen
     {
         public TouchScreenMappingProfile()
         {
-            CreateMap<AstrolPOSAPI.Domain.Entities.POS.TouchScreen, TouchScreenDto>().ReverseMap();
-            CreateMap<AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton, TouchScreenButtonDto>().ReverseMap();
+            CreateMap<Domain.Entities.POS.TouchScreen, TouchScreenDto>()
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Company != null ? src.Company.Name : null))
+                .ForMember(dest => dest.StoreOfOperationName, opt => opt.MapFrom(src => src.StoreOfOperation != null ? src.StoreOfOperation.Name : null));
+
+            CreateMap<Domain.Entities.POS.TouchScreenButton, TouchScreenButtonDto>()
+                .ForMember(dest => dest.CompanyName, opt => opt.MapFrom(src => src.Company != null ? src.Company.Name : null))
+                .ForMember(dest => dest.StoreOfOperationName, opt => opt.MapFrom(src => src.StoreOfOperation != null ? src.StoreOfOperation.Name : null));
             CreateMap<CreateTouchScreenDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
             CreateMap<UpdateTouchScreenDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreen>();
             CreateMap<CreateTouchScreenButtonDto, AstrolPOSAPI.Domain.Entities.POS.TouchScreenButton>();

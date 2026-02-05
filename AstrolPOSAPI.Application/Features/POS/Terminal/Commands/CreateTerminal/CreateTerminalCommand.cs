@@ -9,6 +9,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.CreateTerminal
     public class CreateTerminalCommand : IRequest<TerminalDto>
     {
         public string Code { get; set; } = default!;
+        public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public string CompanyId { get; set; } = default!;
         public string StoreOfOperationId { get; set; } = default!;
@@ -19,6 +20,7 @@ namespace AstrolPOSAPI.Application.Features.POS.Terminal.Commands.CreateTerminal
         public CreateTerminalCommandValidator()
         {
             RuleFor(p => p.Code).NotEmpty().MaximumLength(32);
+            RuleFor(p => p.Name).NotEmpty().MaximumLength(64);
             RuleFor(p => p.Description).NotEmpty().MaximumLength(128);
             RuleFor(p => p.CompanyId).NotEmpty();
             RuleFor(p => p.StoreOfOperationId).NotEmpty();

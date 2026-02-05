@@ -6,13 +6,16 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs
     public class TouchScreenDto
     {
         public string Id { get; set; } = default!;
+        public string Code { get; set; } = default!;
         public string ScreenName { get; set; } = default!;
         public string? Description { get; set; }
         public int GridRows { get; set; }
         public int GridColumns { get; set; }
         public int DefaultFontSize { get; set; }
         public string CompanyId { get; set; } = default!;
+        public string? CompanyName { get; set; }
         public string StoreOfOperationId { get; set; } = default!;
+        public string? StoreOfOperationName { get; set; }
         public List<TouchScreenButtonDto>? Buttons { get; set; }
     }
 
@@ -36,11 +39,17 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs
         public bool IsDefaultImage { get; set; }
         public int SortOrder { get; set; }
         public string CompanyId { get; set; } = default!;
+        public string? CompanyName { get; set; }
         public string StoreOfOperationId { get; set; } = default!;
+        public string? StoreOfOperationName { get; set; }
     }
 
     public class CreateTouchScreenDto
     {
+        [Required]
+        [MaxLength(32)]
+        public string Code { get; set; } = default!;
+
         [Required]
         [MaxLength(100)]
         public string ScreenName { get; set; } = default!;
@@ -68,6 +77,10 @@ namespace AstrolPOSAPI.Application.Features.POS.TouchScreen.DTOs
     {
         [Required]
         public string Id { get; set; } = default!;
+
+        [Required]
+        [MaxLength(32)]
+        public string Code { get; set; } = default!;
 
         [Required]
         [MaxLength(100)]
