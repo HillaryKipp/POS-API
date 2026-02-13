@@ -54,11 +54,12 @@ namespace AstrolPOSAPI.Domain.Entities.POS
     public enum PaymentMethod
     {
         Cash = 0,
-        Mpesa = 1,
-        Visa = 2,
-        Mastercard = 3,
-        BankTransfer = 4,
-        CreditAccount = 5
+        Card = 1,
+        Mpesa = 2,
+        Visa = 3,
+        Mastercard = 4,
+        BankTransfer = 5,
+        CreditAccount = 6
     }
 
     public enum PaymentStatus

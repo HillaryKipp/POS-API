@@ -71,11 +71,11 @@ namespace AstrolPOSAPI.Application.Features.POS.Sales.Commands.ProcessPayment
 
             var remainingAmount = salesOrder.TotalAmount - existingPayments;
 
-            if (request.Amount > remainingAmount && request.PaymentMethod != PaymentMethod.Cash)
-            {
-                // Only cash can be overpaid (for change)
-                throw new InvalidOperationException($"Payment amount exceeds remaining balance. Remaining: {remainingAmount:C}");
-            }
+            //if (request.Amount > remainingAmount && request.PaymentMethod != PaymentMethod.Cash)
+            //{
+            //    // Only cash can be overpaid (for change)
+            //    throw new InvalidOperationException($"Payment amount exceeds remaining balance. Remaining: {remainingAmount:C}");
+            //}
 
             // Process payment based on method
             var payment = new Payment
