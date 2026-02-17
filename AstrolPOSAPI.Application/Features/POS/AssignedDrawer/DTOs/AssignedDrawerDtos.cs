@@ -1,3 +1,4 @@
+using AstrolPOSAPI.Domain.Entities.POS;
 using System.ComponentModel.DataAnnotations;
 
 namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs
@@ -17,6 +18,7 @@ namespace AstrolPOSAPI.Application.Features.POS.AssignedDrawer.DTOs
         public string StoreOfOperationId { get; set; } = default!;
         public string? StoreOfOperationName { get; set; }
         public string? DrawerName { get; set; }
+        public DrawerStatus? DrawerStatus { get; set; }
         public string? DefaultScreenName { get; set; }
         public string? UserName { get; set; }
     }
