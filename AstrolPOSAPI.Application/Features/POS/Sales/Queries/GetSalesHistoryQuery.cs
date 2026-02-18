@@ -3,6 +3,7 @@ using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.Sales.Queries
 {
@@ -32,8 +33,13 @@ namespace AstrolPOSAPI.Application.Features.POS.Sales.Queries
 
         public async Task<List<SalesOrderDto>> Handle(GetSalesHistoryQuery request, CancellationToken cancellationToken)
         {
-            var allOrders = await _unitOfWork.Repository<SalesOrder>().GetAllAsync();
-            var query = allOrders.AsQueryable().Where(o => o.DeletedDate == null);
+            // Use IQueryable with .Include() to eagerly load related data
+            var query = _unitOfWork.Repository<SalesOrder>().Entities
+                .Include(o => o.Lines)
+                .Include(o => o.Payments)
+                .Include(o => o.Cashier)
+                .Include(o => o.Drawer)
+                .Where(o => o.DeletedDate == null);
 
             if (!string.IsNullOrEmpty(request.CompanyId))
                 query = query.Where(o => o.CompanyId == request.CompanyId);
@@ -56,13 +62,14 @@ namespace AstrolPOSAPI.Application.Features.POS.Sales.Queries
             if (request.ToDate.HasValue)
                 query = query.Where(o => o.OrderDate <= request.ToDate.Value);
 
-            var orders = query
+            var orders = await query
                 .OrderByDescending(o => o.OrderDate)
                 .Skip((request.PageNumber - 1) * request.PageSize)
                 .Take(request.PageSize)
-                .ToList();
+                .ToListAsync(cancellationToken);
 
             return _mapper.Map<List<SalesOrderDto>>(orders);
         }
     }
 }
+

@@ -1,8 +1,8 @@
 using AstrolPOSAPI.Application.Interfaces.Services;
 using AstrolPOSAPI.Infrastructure.Services;
 using AstrolPOSAPI.Shared.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AstrolPOSAPI.Infrastructure
 {
@@ -21,6 +21,10 @@ namespace AstrolPOSAPI.Infrastructure
             // NoSeries service for auto-generating codes
             services.AddTransient<AstrolPOSAPI.Application.Interfaces.Services.INoSeriesService,
                 Services.NoSeriesService>();
+
+            // Current User Service (for Auditing)
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUserService, CurrentUserService>();
 
             services.AddTransient<AstrolPOSAPI.Application.Interfaces.Infrastructure.ISmsSender,
                 Services.ExpressSmsSender>();

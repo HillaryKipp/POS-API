@@ -3,6 +3,7 @@ using AstrolPOSAPI.Application.Interfaces.Repositories;
 using AstrolPOSAPI.Domain.Entities.POS;
 using AutoMapper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Application.Features.POS.Sales.Queries
 {
@@ -24,20 +25,18 @@ namespace AstrolPOSAPI.Application.Features.POS.Sales.Queries
 
         public async Task<SalesOrderDto> Handle(GetSalesOrderByIdQuery request, CancellationToken cancellationToken)
         {
-            var order = await _unitOfWork.Repository<SalesOrder>().GetByIdAsync(request.Id);
-            if (order == null || order.DeletedDate != null)
+            var order = await _unitOfWork.Repository<SalesOrder>().Entities
+                .Include(o => o.Lines)
+                .Include(o => o.Payments)
+                .Include(o => o.Cashier)
+                .Include(o => o.Drawer)
+                .FirstOrDefaultAsync(o => o.Id == request.Id && o.DeletedDate == null, cancellationToken);
+
+            if (order == null)
                 throw new KeyNotFoundException($"Sales order with ID {request.Id} not found");
 
-            var allLines = await _unitOfWork.Repository<SalesOrderLine>().GetAllAsync();
-            var allPayments = await _unitOfWork.Repository<Payment>().GetAllAsync();
-
-            var dto = _mapper.Map<SalesOrderDto>(order);
-            dto.Lines = _mapper.Map<List<SalesOrderLineDto>>(
-                allLines.Where(l => l.SalesOrderId == request.Id && l.DeletedDate == null).ToList());
-            dto.Payments = _mapper.Map<List<PaymentDto>>(
-                allPayments.Where(p => p.SalesOrderId == request.Id && p.DeletedDate == null).ToList());
-
-            return dto;
+            return _mapper.Map<SalesOrderDto>(order);
         }
     }
 }
+

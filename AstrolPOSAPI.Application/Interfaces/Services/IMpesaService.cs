@@ -36,6 +36,21 @@ namespace AstrolPOSAPI.Application.Interfaces.Services
         Task<MpesaResult> ProcessCallbackAsync(StkPushCallback callback);
 
         /// <summary>
+        /// Register C2B URLs with Safaricom
+        /// </summary>
+        Task<MpesaResult> RegisterC2BUrlsAsync(string shortCode, string confirmationUrl, string validationUrl);
+
+        /// <summary>
+        /// Validate C2B payment (optional callback)
+        /// </summary>
+        Task<C2BValidationResponse> ValidateC2BPaymentAsync(C2BValidationRequest request);
+
+        /// <summary>
+        /// Process C2B payment confirmation
+        /// </summary>
+        Task<MpesaResult> ProcessC2BConfirmationAsync(C2BConfirmationRequest request);
+
+        /// <summary>
         /// Format phone number to M-Pesa format (254XXXXXXXXX)
         /// </summary>
         /// <param name="phoneNumber">Phone number in any format</param>

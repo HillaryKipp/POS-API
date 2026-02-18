@@ -322,3 +322,4 @@ logs/
 *.jpg
 *.jpeg
 *.png
+*.pubxml

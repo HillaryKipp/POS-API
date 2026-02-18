@@ -12,10 +12,99 @@ using Microsoft.EntityFrameworkCore;
 
 namespace AstrolPOSAPI.Persistence.Contexts
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : IdentityDbContext<AppUser, AppRole, string>(options)
+    public class AppDbContext : IdentityDbContext<AppUser, AppRole, string>
     {
+        private readonly AstrolPOSAPI.Application.Interfaces.Services.ICurrentUserService _currentUserService;
+
+        public AppDbContext(
+            DbContextOptions<AppDbContext> options,
+            AstrolPOSAPI.Application.Interfaces.Services.ICurrentUserService currentUserService) : base(options)
+        {
+            _currentUserService = currentUserService;
+        }
 
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
+
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var userId = _currentUserService.UserId;
+            var now = DateTimeOffset.UtcNow;
+
+            // ---------------------------
+            // 1. FIX: Materialize entries before looping
+            // ---------------------------
+            var entries = ChangeTracker
+                .Entries<BaseAuditableEntity>()
+                .ToList();
+
+            foreach (var entry in entries)
+            {
+                switch (entry.State)
+                {
+                    case EntityState.Added:
+                        entry.Entity.CreatedDate = now.DateTime;
+                        entry.Entity.CreatedBy = userId;
+                        break;
+                    case EntityState.Modified:
+                        entry.Entity.UpdatedDate = now.DateTime;
+                        entry.Entity.UpdatedBy = userId;
+                        break;
+                    case EntityState.Deleted:
+                        entry.Entity.DeletedDate = now.DateTime;
+                        entry.Entity.DeletedBy = userId;
+                        break;
+                }
+            }
+
+            // ---------------------------
+            // 2. FIX: Materialize audit entries before looping
+            // ---------------------------
+            var auditEntries = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added
+                            || e.State == EntityState.Modified
+                            || e.State == EntityState.Deleted)
+                .Where(e => e.Entity is not AuditLog)
+                .ToList();
+
+            foreach (var e in auditEntries)
+            {
+                var log = new AuditLog
+                {
+                    TableName = e.Metadata.GetTableName() ?? e.Entity.GetType().Name,
+                    Action = e.State.ToString(),
+                    OccurredAt = now,
+                    UserId = userId // Capture the user ID here
+                };
+
+                // Primary Key
+                var key = e.Properties
+                    .Where(p => p.Metadata.IsPrimaryKey())
+                    .ToDictionary(p => p.Metadata.Name, p => p.CurrentValue?.ToString()); // Ensure string conversion
+
+                log.KeyValues = JsonSerializer.Serialize(key);
+
+                // OLD VALUES
+                if (e.State == EntityState.Modified || e.State == EntityState.Deleted)
+                {
+                    var oldVals = e.Properties
+                        .ToDictionary(p => p.Metadata.Name, p => p.OriginalValue?.ToString());
+                    log.OldValues = JsonSerializer.Serialize(oldVals);
+                }
+
+                // NEW VALUES
+                if (e.State == EntityState.Added || e.State == EntityState.Modified)
+                {
+                    var newVals = e.Properties
+                        .ToDictionary(p => p.Metadata.Name, p => p.CurrentValue?.ToString());
+                    log.NewValues = JsonSerializer.Serialize(newVals);
+                }
+
+                // THIS modifies ChangeTracker → MUST run AFTER .ToList()
+                AuditLogs.Add(log);
+            }
+
+            return await base.SaveChangesAsync(cancellationToken);
+        }
         public DbSet<Company> Companies => Set<Company>();
         public DbSet<Store> Stores => Set<Store>();
         public DbSet<StoreType> StoreTypes => Set<StoreType>();
@@ -625,81 +714,7 @@ namespace AstrolPOSAPI.Persistence.Contexts
             });
         }
 
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var now = DateTimeOffset.UtcNow;
 
-            // ---------------------------
-            // 1. FIX: Materialize entries before looping
-            // ---------------------------
-            var entries = ChangeTracker
-                .Entries<BaseAuditableEntity>()
-                .ToList();
-
-            foreach (var entry in entries)
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedDate = now.DateTime;
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.UpdatedDate = now.DateTime;
-                        break;
-                    case EntityState.Deleted:
-                        entry.Entity.DeletedDate = now.DateTime;
-                        break;
-                }
-            }
-
-            // ---------------------------
-            // 2. FIX: Materialize audit entries before looping
-            // ---------------------------
-            var auditEntries = ChangeTracker.Entries()
-                .Where(e => e.State == EntityState.Added
-                            || e.State == EntityState.Modified
-                            || e.State == EntityState.Deleted)
-                .Where(e => e.Entity is not AuditLog)
-                .ToList();
-
-            foreach (var e in auditEntries)
-            {
-                var log = new AuditLog
-                {
-                    TableName = e.Metadata.GetTableName() ?? e.Entity.GetType().Name,
-                    Action = e.State.ToString(),
-                    OccurredAt = now,
-                };
-
-                // Primary Key
-                var key = e.Properties
-                    .Where(p => p.Metadata.IsPrimaryKey())
-                    .ToDictionary(p => p.Metadata.Name, p => p.CurrentValue);
-
-                log.KeyValues = JsonSerializer.Serialize(key);
-
-                // OLD VALUES
-                if (e.State == EntityState.Modified || e.State == EntityState.Deleted)
-                {
-                    var oldVals = e.Properties
-                        .ToDictionary(p => p.Metadata.Name, p => p.OriginalValue);
-                    log.OldValues = JsonSerializer.Serialize(oldVals);
-                }
-
-                // NEW VALUES
-                if (e.State == EntityState.Added || e.State == EntityState.Modified)
-                {
-                    var newVals = e.Properties
-                        .ToDictionary(p => p.Metadata.Name, p => p.CurrentValue);
-                    log.NewValues = JsonSerializer.Serialize(newVals);
-                }
-
-                // THIS modifies ChangeTracker → MUST run AFTER .ToList()
-                AuditLogs.Add(log);
-            }
-
-            return await base.SaveChangesAsync(cancellationToken);
-        }
 
 
     }

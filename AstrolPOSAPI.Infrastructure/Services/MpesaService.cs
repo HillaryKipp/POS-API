@@ -380,5 +380,102 @@ namespace AstrolPOSAPI.Infrastructure.Services
             var rawPassword = $"{_settings.Shortcode}{_settings.Passkey}{timestamp}";
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(rawPassword));
         }
+
+        /// <inheritdoc />
+        public async Task<MpesaResult> RegisterC2BUrlsAsync(string shortCode, string confirmationUrl, string validationUrl)
+        {
+            try
+            {
+                var token = await GetAccessTokenAsync();
+                if (string.IsNullOrEmpty(token))
+                {
+                    return new MpesaResult { Success = false, Message = "Failed to obtain access token" };
+                }
+
+                var request = new C2BRegisterUrlRequest
+                {
+                    ShortCode = shortCode,
+                    ResponseType = "Completed",
+                    ConfirmationURL = confirmationUrl,
+                    ValidationURL = validationUrl
+                };
+
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                var json = JsonSerializer.Serialize(request);
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                var response = await _httpClient.PostAsync("/mpesa/c2b/v1/registerurl", content);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                _logger.LogInformation("C2B Register URL Response: {Response}", responseContent);
+
+                var c2bResponse = JsonSerializer.Deserialize<C2BRegisterUrlResponse>(responseContent);
+
+                if (c2bResponse != null && !string.IsNullOrEmpty(c2bResponse.OriginatorConversationID))
+                {
+                    return new MpesaResult
+                    {
+                        Success = true,
+                        Message = c2bResponse.ResponseDescription,
+                        MerchantRequestId = c2bResponse.OriginatorConversationID
+                    };
+                }
+
+                return new MpesaResult { Success = false, Message = responseContent };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error registering C2B URLs");
+                return new MpesaResult { Success = false, Message = ex.Message };
+            }
+        }
+
+        /// <inheritdoc />
+        public Task<C2BValidationResponse> ValidateC2BPaymentAsync(C2BValidationRequest request)
+        {
+            // Perform any validation logic here (e.g., check if BillRefNumber exists)
+            // For now, accept all payments
+            _logger.LogInformation("Validating C2B Payment: {TransID}, Amount: {Amount}, BillRef: {BillRef}",
+                request.TransID, request.TransAmount, request.BillRefNumber);
+
+            return Task.FromResult(new C2BValidationResponse { ResultCode = "0", ResultDesc = "Accepted" });
+        }
+
+        /// <inheritdoc />
+        public Task<MpesaResult> ProcessC2BConfirmationAsync(C2BConfirmationRequest request)
+        {
+            try
+            {
+                _logger.LogInformation("Processing C2B Confirmation: {TransID}, Amount: {Amount}, BillRef: {BillRef}",
+                    request.TransID, request.TransAmount, request.BillRefNumber);
+
+                if (decimal.TryParse(request.TransAmount, out var amount))
+                {
+                    var result = new MpesaResult
+                    {
+                        Success = true,
+                        MpesaReceiptNumber = request.TransID,
+                        Amount = amount,
+                        PhoneNumber = request.MSISDN,
+                        CheckoutRequestId = request.BillRefNumber // Use BillRef as the linker
+                    };
+
+                    // Try parsing transaction date if available
+                    if (DateTime.TryParseExact(request.TransTime, "yyyyMMddHHmmss", null,
+                        System.Globalization.DateTimeStyles.None, out var date))
+                    {
+                        result.TransactionDate = date;
+                    }
+
+                    return Task.FromResult(result);
+                }
+
+                return Task.FromResult(new MpesaResult { Success = false, Message = "Invalid amount format" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing C2B confirmation");
+                return Task.FromResult(new MpesaResult { Success = false, Message = ex.Message });
+            }
+        }
     }
 }

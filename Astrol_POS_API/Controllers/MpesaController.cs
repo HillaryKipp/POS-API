@@ -96,6 +96,53 @@ namespace Astrol_POS_API.WebAPI.Controllers
             return Ok(result);
         }
 
+        /// <summary>
+        /// Register C2B URLs (Admin only)
+        /// </summary>
+        [HttpPost("c2b/register-url")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> RegisterC2BUrl([FromBody] C2BRegisterUrlRequest request)
+        {
+            var result = await _mpesaService.RegisterC2BUrlsAsync(
+                request.ShortCode,
+                request.ConfirmationURL,
+                request.ValidationURL);
+
+            if (!result.Success)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// M-Pesa C2B Validation Callback
+        /// </summary>
+        [HttpPost("c2b/validation")]
+        [AllowAnonymous]
+        public async Task<IActionResult> C2BValidation([FromBody] C2BValidationRequest request)
+        {
+            var response = await _mpesaService.ValidateC2BPaymentAsync(request);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// M-Pesa C2B Confirmation Callback
+        /// </summary>
+        [HttpPost("c2b/confirmation")]
+        [AllowAnonymous]
+        public async Task<IActionResult> C2BConfirmation([FromBody] C2BConfirmationRequest request)
+        {
+            var result = await _mpesaService.ProcessC2BConfirmationAsync(request);
+
+            // Update payment stats if successful match found
+            if (result.Success)
+            {
+                await UpdatePaymentStatus(result, PaymentStatus.Completed);
+            }
+
+            return Ok(new { ResultCode = "0", ResultDesc = "Accepted" });
+        }
+
         private async Task UpdatePaymentStatus(MpesaResult result, PaymentStatus status)
         {
             try

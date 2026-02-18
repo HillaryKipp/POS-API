@@ -61,6 +61,32 @@ namespace Astrol_POS_API.WebAPI.Controllers
         }
 
         /// <summary>
+        /// Look up an item by its barcode (for barcode scanner)
+        /// </summary>
+        [HttpGet("barcode/{barcode}")]
+        public async Task<IActionResult> GetByBarcode(
+            string barcode,
+            [FromQuery] string? companyId,
+            [FromQuery] string? storeOfOperationId)
+        {
+            var query = new GetItemByBarcodeQuery
+            {
+                Barcode = barcode,
+                CompanyId = companyId,
+                StoreOfOperationId = storeOfOperationId
+            };
+            try
+            {
+                var result = await _mediator.Send(query);
+                return Ok(result);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
         /// Create a new item
         /// </summary>
         [HttpPost]
