@@ -1,7 +1,7 @@
-using AstrolPOSAPI.Application.Interfaces.Repositories;
-using AstrolPOSAPI.Persistence.Contexts;
-using AstrolPOSAPI.Domain.Common;
 using System.Collections;
+using AstrolPOSAPI.Application.Interfaces.Repositories;
+using AstrolPOSAPI.Domain.Common;
+using AstrolPOSAPI.Persistence.Contexts;
 
 namespace AstrolPOSAPI.Persistence.Repositories
 {
@@ -42,6 +42,21 @@ namespace AstrolPOSAPI.Persistence.Repositories
         {
             _dbContext.ChangeTracker.Entries().ToList().ForEach(x => x.Reload());
             return Task.CompletedTask;
+        }
+
+        public async Task BeginTransactionAsync()
+        {
+            await _dbContext.Database.BeginTransactionAsync();
+        }
+
+        public async Task CommitTransactionAsync()
+        {
+            await _dbContext.Database.CommitTransactionAsync();
+        }
+
+        public async Task RollbackTransactionAsync()
+        {
+            await _dbContext.Database.RollbackTransactionAsync();
         }
 
         public async Task<int> Save(CancellationToken cancellationToken)
