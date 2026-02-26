@@ -143,6 +143,13 @@ namespace AstrolPOSAPI.Persistence.Contexts
         public DbSet<AstrolPOSAPI.Domain.Entities.Purchasing.PurchInvLine> PurchInvLines => Set<AstrolPOSAPI.Domain.Entities.Purchasing.PurchInvLine>();
         public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.GLEntry> GLEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.GLEntry>();
         public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.VendorLedgerEntry> VendorLedgerEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.VendorLedgerEntry>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.Customer> Customers => Set<AstrolPOSAPI.Domain.Entities.Accounting.Customer>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.CustomerPostingGroup> CustomerPostingGroups => Set<AstrolPOSAPI.Domain.Entities.Accounting.CustomerPostingGroup>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.GenProdPostingGroup> GenProdPostingGroups => Set<AstrolPOSAPI.Domain.Entities.Accounting.GenProdPostingGroup>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.GeneralPostingSetup> GeneralPostingSetups => Set<AstrolPOSAPI.Domain.Entities.Accounting.GeneralPostingSetup>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.BankAccount> BankAccounts => Set<AstrolPOSAPI.Domain.Entities.Accounting.BankAccount>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.BankLedgerEntry> BankLedgerEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.BankLedgerEntry>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.CustomerLedgerEntry> CustomerLedgerEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.CustomerLedgerEntry>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -608,6 +615,11 @@ namespace AstrolPOSAPI.Persistence.Contexts
                     .HasForeignKey(i => i.StoreOfOperationId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                e.HasOne(i => i.GenProdPostingGroup)
+                    .WithMany()
+                    .HasForeignKey(i => i.GenProdPostingGroupId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
                 e.HasQueryFilter(i => i.DeletedDate == null);
                 e.HasIndex(i => new { i.CompanyId, i.Code }).IsUnique();
                 e.HasIndex(i => i.Barcode);
@@ -793,6 +805,53 @@ namespace AstrolPOSAPI.Persistence.Contexts
                 e.Property(p => p.Amount).HasPrecision(18, 4);
                 e.Property(p => p.RemainingAmount).HasPrecision(18, 4);
                 e.HasIndex(p => new { p.CompanyId, p.VendorNo, p.Open });
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.Customer>(e =>
+            {
+                e.Property(p => p.No).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Name).IsRequired().HasMaxLength(256);
+                e.HasIndex(p => new { p.CompanyId, p.No }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.CustomerPostingGroup>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.HasIndex(p => new { p.CompanyId, p.Code }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.GenProdPostingGroup>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.HasIndex(p => new { p.CompanyId, p.Code }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.GeneralPostingSetup>(e =>
+            {
+                e.Property(p => p.GenBusPostingGroupCode).IsRequired().HasMaxLength(32);
+                e.Property(p => p.GenProdPostingGroupCode).IsRequired().HasMaxLength(32);
+                e.HasIndex(p => new { p.CompanyId, p.GenBusPostingGroupCode, p.GenProdPostingGroupCode }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.BankAccount>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Name).IsRequired().HasMaxLength(256);
+                e.Property(p => p.Balance).HasPrecision(18, 4);
+                e.HasIndex(p => new { p.CompanyId, p.Code }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.BankLedgerEntry>(e =>
+            {
+                e.Property(p => p.Amount).HasPrecision(18, 4);
+                e.HasIndex(p => new { p.CompanyId, p.BankAccountCode, p.PostingDate });
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.CustomerLedgerEntry>(e =>
+            {
+                e.Property(p => p.Amount).HasPrecision(18, 4);
+                e.Property(p => p.RemainingAmount).HasPrecision(18, 4);
+                e.HasIndex(p => new { p.CompanyId, p.CustomerNo, p.Open });
             });
         }
 

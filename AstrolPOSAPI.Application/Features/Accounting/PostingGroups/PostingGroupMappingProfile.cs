@@ -18,6 +18,22 @@ namespace AstrolPOSAPI.Application.Features.Accounting.PostingGroups
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Name));
             CreateMap<UpdateGenBusPostingGroupDto, GenBusPostingGroup>()
                 .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Name));
+
+            CreateMap<CustomerPostingGroup, CustomerPostingGroupDto>().ReverseMap();
+            CreateMap<CreateCustomerPostingGroupDto, CustomerPostingGroup>();
+            CreateMap<UpdateCustomerPostingGroupDto, CustomerPostingGroup>();
+
+            CreateMap<GenProdPostingGroup, GenProdPostingGroupDto>().ReverseMap();
+            CreateMap<CreateGenProdPostingGroupDto, GenProdPostingGroup>();
+            CreateMap<UpdateGenProdPostingGroupDto, GenProdPostingGroup>();
+
+            CreateMap<GeneralPostingSetup, GeneralPostingSetupDto>().ReverseMap();
+            CreateMap<CreateGeneralPostingSetupDto, GeneralPostingSetup>();
+            CreateMap<UpdateGeneralPostingSetupDto, GeneralPostingSetup>();
+
+            CreateMap<BankAccount, BankAccountDto>().ReverseMap();
+            CreateMap<CreateBankAccountDto, BankAccount>();
+            CreateMap<UpdateBankAccountDto, BankAccount>();
         }
     }
 }

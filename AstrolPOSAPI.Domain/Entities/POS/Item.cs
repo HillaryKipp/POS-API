@@ -60,6 +60,9 @@ namespace AstrolPOSAPI.Domain.Entities.POS
         /// </summary>
         public string? Barcode { get; set; }
 
+        public string? GenProdPostingGroupId { get; set; }
+        public AstrolPOSAPI.Domain.Entities.Accounting.GenProdPostingGroup? GenProdPostingGroup { get; set; }
+
         public string CompanyId { get; set; } = string.Empty;
         public Company? Company { get; set; }
 
