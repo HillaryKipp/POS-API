@@ -45,6 +45,34 @@ namespace Astrol_POS_API.Controllers
 
         #endregion
 
+        #region Gen Bus Posting Group
+
+        [HttpGet("gen-bus")]
+        public async Task<IActionResult> GetAllGenBusPostingGroups([FromQuery] string companyId)
+        {
+            return Ok(await _mediator.Send(new GetAllGenBusPostingGroupsQuery { CompanyId = companyId }));
+        }
+
+        [HttpPost("gen-bus")]
+        public async Task<IActionResult> CreateGenBusPostingGroup([FromBody] CreateGenBusPostingGroupDto dto)
+        {
+            return Ok(await _mediator.Send(new CreateGenBusPostingGroupCommand { PostingGroup = dto }));
+        }
+
+        [HttpPut("gen-bus")]
+        public async Task<IActionResult> UpdateGenBusPostingGroup([FromBody] UpdateGenBusPostingGroupDto dto)
+        {
+            return Ok(await _mediator.Send(new UpdateGenBusPostingGroupCommand { PostingGroup = dto }));
+        }
+
+        [HttpDelete("gen-bus/{id}")]
+        public async Task<IActionResult> DeleteGenBusPostingGroup(string id)
+        {
+            return Ok(await _mediator.Send(new DeleteGenBusPostingGroupCommand { Id = id }));
+        }
+
+        #endregion
+
         #region Gen Prod Posting Group
 
         [HttpGet("gen-prod")]
