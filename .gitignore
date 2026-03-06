@@ -324,3 +324,17 @@ logs/
 *.jpeg
 *.png
 *.pubxml
+
+
+# Publish directory
+publish/
+
+# Documentation and Images
+*.docx
+*.txt
+*.pdf
+*.jpg
+*.jpeg
+*.png
+*.pubxml
+*.md

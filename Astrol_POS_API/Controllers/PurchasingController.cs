@@ -35,6 +35,18 @@ namespace Astrol_POS_API.Controllers
             return Ok(await _mediator.Send(new CreatePurchaseInvoiceCommand { Invoice = invoice }));
         }
 
+        [HttpPut("invoices/{id}")]
+        public async Task<IActionResult> UpdateInvoice(string id, [FromBody] CreatePurchaseHeaderDto invoice)
+        {
+            return Ok(await _mediator.Send(new UpdatePurchaseInvoiceCommand { Id = id, Invoice = invoice }));
+        }
+
+        [HttpDelete("invoices/{id}")]
+        public async Task<IActionResult> DeleteInvoice(string id)
+        {
+            return Ok(await _mediator.Send(new DeletePurchaseInvoiceCommand { Id = id }));
+        }
+
         [HttpPost("invoices/{id}/post")]
         public async Task<IActionResult> PostInvoice(string id)
         {
