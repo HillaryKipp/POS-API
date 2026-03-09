@@ -14,7 +14,7 @@ namespace AstrolPOSAPI.IntegrationTests
             _factory = factory;
         }
 
-        [Fact(Skip = "Requires DB configuration and migrations")]
+        [Fact]
         public async Task Register_Then_Login_Should_Return_Jwt()
         {
             var client = _factory.CreateClient();
