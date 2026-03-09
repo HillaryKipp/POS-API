@@ -90,6 +90,16 @@ namespace AstrolPOSAPI.Infrastructure.Services
                 var responseContent = await response.Content.ReadAsStringAsync();
                 _logger.LogDebug("STK Push Response: {Response}", responseContent);
 
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogWarning("M-Pesa STK Push API returned error: {Status}", response.StatusCode);
+                    return new MpesaResult
+                    {
+                        Success = false,
+                        Message = $"M-Pesa API returned {response.StatusCode}. Please try again later or use manual reference."
+                    };
+                }
+
                 var stkResponse = JsonSerializer.Deserialize<StkPushResponse>(responseContent);
 
                 if (stkResponse == null)
@@ -174,6 +184,15 @@ namespace AstrolPOSAPI.Infrastructure.Services
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 _logger.LogDebug("STK Query Response: {Response}", responseContent);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new MpesaResult
+                    {
+                        Success = false,
+                        Message = $"M-Pesa API error: {response.StatusCode}"
+                    };
+                }
 
                 var queryResponse = JsonSerializer.Deserialize<StkQueryResponse>(responseContent);
 
@@ -407,6 +426,11 @@ namespace AstrolPOSAPI.Infrastructure.Services
                 var response = await _httpClient.PostAsync("/mpesa/c2b/v1/registerurl", content);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 _logger.LogInformation("C2B Register URL Response: {Response}", responseContent);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new MpesaResult { Success = false, Message = $"M-Pesa API error: {response.StatusCode}. {responseContent}" };
+                }
 
                 var c2bResponse = JsonSerializer.Deserialize<C2BRegisterUrlResponse>(responseContent);
 
