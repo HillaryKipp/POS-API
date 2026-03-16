@@ -88,6 +88,9 @@ builder.Services.AddValidatorsFromAssembly(typeof(AstrolPOSAPI.Application.Featu
 builder.Services.AddInfrastructureLayer(builder.Configuration);
 
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks()
+    .AddCheck("Self", () => Microsoft.Extensions.Diagnostics.HealthChecks.HealthCheckResult.Healthy())
+    .AddDbContextCheck<AppDbContext>();
 
 // ---------------------------
 // PRODUCTION READINESS: Security
@@ -193,5 +196,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.Run();

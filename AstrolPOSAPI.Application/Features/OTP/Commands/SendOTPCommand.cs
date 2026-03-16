@@ -35,9 +35,9 @@ namespace AstrolPOSAPI.Application.Features.OTP.Commands
 
             // Generate 6-digit OTP using a cryptographically secure RNG
             using var rng = System.Security.Cryptography.RandomNumberGenerator.Create();
-            Span<byte> bytes = stackalloc byte[4];
+            var bytes = new byte[4];
             rng.GetBytes(bytes);
-            var value = BitConverter.ToUInt32(bytes);
+            var value = BitConverter.ToUInt32(bytes, 0);
             var otpCode = (value % 900000 + 100000).ToString();
 
             var otp = new AstrolPOSAPI.Domain.Entities.Identity.OTP
