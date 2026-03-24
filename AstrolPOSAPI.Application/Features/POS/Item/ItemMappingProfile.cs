@@ -11,7 +11,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Item
         public ItemMappingProfile()
         {
             CreateMap<ItemEntity, ItemDto>()
-                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null));
+                .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Category != null ? src.Category.Name : null))
+                .ForMember(dest => dest.GenProdPostingGroupCode, opt => opt.MapFrom(src => src.GenProdPostingGroup != null ? src.GenProdPostingGroup.Code : null));
             CreateMap<ItemDto, ItemEntity>();
             CreateMap<CreateItemDto, ItemEntity>();
             CreateMap<UpdateItemDto, ItemEntity>();

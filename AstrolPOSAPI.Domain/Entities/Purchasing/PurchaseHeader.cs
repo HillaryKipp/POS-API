@@ -14,6 +14,7 @@ namespace AstrolPOSAPI.Domain.Entities.Purchasing
         public DateTime DueDate { get; set; }
 
         public string? VendorInvoiceNo { get; set; }
+        public string? AttachmentUrl { get; set; }
         public PurchaseStatus Status { get; set; } = PurchaseStatus.Open;
 
         public string CompanyId { get; set; } = string.Empty;

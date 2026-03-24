@@ -70,6 +70,7 @@ namespace AstrolPOSAPI.Application.Features.Purchasing.Invoice.Commands
                     DocumentDate = header.DocumentDate,
                     DueDate = header.DueDate,
                     VendorInvoiceNo = header.VendorInvoiceNo,
+                    AttachmentUrl = header.AttachmentUrl,
                     SourceNo = header.No,
                     CompanyId = header.CompanyId
                 };

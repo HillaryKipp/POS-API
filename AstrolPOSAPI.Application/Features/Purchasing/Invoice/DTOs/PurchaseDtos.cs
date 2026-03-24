@@ -12,6 +12,7 @@ namespace AstrolPOSAPI.Application.Features.Purchasing.Invoice.DTOs
         public DateTime DueDate { get; set; }
 
         public string? VendorInvoiceNo { get; set; }
+        public string? AttachmentUrl { get; set; }
         public string Status { get; set; } = string.Empty;
 
         public List<PurchaseLineDto> Lines { get; set; } = new();
@@ -33,6 +34,7 @@ namespace AstrolPOSAPI.Application.Features.Purchasing.Invoice.DTOs
         public DateTime PostingDate { get; set; }
         public DateTime DocumentDate { get; set; }
         public string? VendorInvoiceNo { get; set; }
+        public string? AttachmentUrl { get; set; }
         public string CompanyId { get; set; } = string.Empty;
 
         public List<CreatePurchaseLineDto> Lines { get; set; } = new();

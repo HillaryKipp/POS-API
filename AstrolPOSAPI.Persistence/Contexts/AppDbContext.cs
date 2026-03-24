@@ -150,10 +150,26 @@ namespace AstrolPOSAPI.Persistence.Contexts
         public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.BankAccount> BankAccounts => Set<AstrolPOSAPI.Domain.Entities.Accounting.BankAccount>();
         public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.BankLedgerEntry> BankLedgerEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.BankLedgerEntry>();
         public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.CustomerLedgerEntry> CustomerLedgerEntries => Set<AstrolPOSAPI.Domain.Entities.Accounting.CustomerLedgerEntry>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Accounting.VATPostingSetup> VATPostingSetups => Set<AstrolPOSAPI.Domain.Entities.Accounting.VATPostingSetup>();
+        public DbSet<AstrolPOSAPI.Domain.Entities.Purchasing.PaymentVoucher> PaymentVouchers => Set<AstrolPOSAPI.Domain.Entities.Purchasing.PaymentVoucher>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Purchasing.PaymentVoucher>(e =>
+            {
+                e.Property(p => p.No).IsRequired().HasMaxLength(32);
+                e.Property(p => p.Amount).HasPrecision(18, 4);
+                e.HasIndex(p => new { p.CompanyId, p.No }).IsUnique();
+            });
+
+            builder.Entity<AstrolPOSAPI.Domain.Entities.Accounting.VATPostingSetup>(e =>
+            {
+                e.Property(p => p.Code).IsRequired().HasMaxLength(32);
+                e.Property(p => p.VATPercentage).HasPrecision(18, 4);
+                e.HasIndex(p => new { p.CompanyId, p.Code }).IsUnique();
+            });
 
             builder.Entity<Company>(e =>
             {

@@ -1,6 +1,9 @@
 using AstrolPOSAPI.Application.Features.Accounting.PostingGroups.Commands;
 using AstrolPOSAPI.Application.Features.Accounting.PostingGroups.DTOs;
 using AstrolPOSAPI.Application.Features.Accounting.PostingGroups.Queries;
+using AstrolPOSAPI.Application.Features.Accounting.VATSetup.Commands;
+using AstrolPOSAPI.Application.Features.Accounting.VATSetup.DTOs;
+using AstrolPOSAPI.Application.Features.Accounting.VATSetup.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -153,6 +156,40 @@ namespace Astrol_POS_API.Controllers
         public async Task<IActionResult> DeleteBankAccount(string id)
         {
             return Ok(await _mediator.Send(new DeleteBankAccountCommand { Id = id }));
+        }
+
+        #endregion
+
+        #region VAT Posting Setup
+
+        [HttpGet("vat")]
+        public async Task<IActionResult> GetAllVATSetups([FromQuery] string companyId)
+        {
+            return Ok(await _mediator.Send(new GetAllVATSetupsQuery { CompanyId = companyId }));
+        }
+
+        [HttpGet("vat/{id}")]
+        public async Task<IActionResult> GetVATSetup(string id)
+        {
+            return Ok(await _mediator.Send(new GetVATSetupQuery { Id = id }));
+        }
+
+        [HttpPost("vat")]
+        public async Task<IActionResult> CreateVATSetup([FromBody] CreateVATSetupDto dto)
+        {
+            return Ok(await _mediator.Send(new CreateVATSetupCommand { VATSetup = dto }));
+        }
+
+        [HttpPut("vat/{id}")]
+        public async Task<IActionResult> UpdateVATSetup(string id, [FromBody] UpdateVATSetupDto dto)
+        {
+            return Ok(await _mediator.Send(new UpdateVATSetupCommand { Id = id, VATSetup = dto }));
+        }
+
+        [HttpDelete("vat/{id}")]
+        public async Task<IActionResult> DeleteVATSetup(string id)
+        {
+            return Ok(await _mediator.Send(new DeleteVATSetupCommand { Id = id }));
         }
 
         #endregion

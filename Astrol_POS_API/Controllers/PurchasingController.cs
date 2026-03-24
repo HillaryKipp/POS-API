@@ -26,6 +26,10 @@ namespace Astrol_POS_API.Controllers
         [HttpGet("invoices/{id}")]
         public async Task<IActionResult> GetInvoice(string id, [FromQuery] bool isPosted = false)
         {
+            if (isPosted)
+            {
+                return Ok(await _mediator.Send(new GetPostedPurchaseInvoiceQuery { Id = id }));
+            }
             return Ok(await _mediator.Send(new GetPurchaseInvoiceQuery { Id = id, IsPosted = isPosted }));
         }
 

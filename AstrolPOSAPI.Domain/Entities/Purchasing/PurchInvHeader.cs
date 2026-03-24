@@ -14,6 +14,7 @@ namespace AstrolPOSAPI.Domain.Entities.Purchasing
         public DateTime DueDate { get; set; }
 
         public string? VendorInvoiceNo { get; set; }
+        public string? AttachmentUrl { get; set; }
         public string? SourceNo { get; set; } // Reference to original PurchaseHeader No
 
         public string CompanyId { get; set; } = string.Empty;

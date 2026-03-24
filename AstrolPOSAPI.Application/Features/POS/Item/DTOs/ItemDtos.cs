@@ -19,6 +19,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Item.DTOs
         public decimal TaxRate { get; set; }
         public bool IsActive { get; set; }
         public string? Barcode { get; set; }
+        public string? GenProdPostingGroupId { get; set; }
+        public string? GenProdPostingGroupCode { get; set; }
         public string CompanyId { get; set; } = default!;
         public string StoreOfOperationId { get; set; } = default!;
     }
@@ -69,6 +71,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Item.DTOs
 
         [Required]
         public string StoreOfOperationId { get; set; } = default!;
+
+        public string? GenProdPostingGroupId { get; set; }
     }
 
     public class UpdateItemDto
@@ -114,6 +118,8 @@ namespace AstrolPOSAPI.Application.Features.POS.Item.DTOs
 
         [MaxLength(100)]
         public string? Barcode { get; set; }
+
+        public string? GenProdPostingGroupId { get; set; }
 
         [Required]
         public string CompanyId { get; set; } = default!;
