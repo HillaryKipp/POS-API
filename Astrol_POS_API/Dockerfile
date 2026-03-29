@@ -7,8 +7,9 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY . .
-RUN dotnet restore "AstrolPOSAPI.API.csproj"
-RUN dotnet publish "AstrolPOSAPI.API.csproj" -c Release -o /app/publish
+RUN dotnet restore "Astrol_POS_API.WebAPI.csproj"
+RUN dotnet publish "Astrol_POS_API.WebAPI.csproj" -c Release -o /app/publish
+
 # Final stage
 FROM base AS final
 WORKDIR /app
