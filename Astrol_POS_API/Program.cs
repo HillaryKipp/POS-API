@@ -32,7 +32,16 @@ builder.Host.UseSerilog();
 // Add services to the container.
 var connString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(connString));
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    if (IsPostgresConnectionString(connString))
+    {
+        options.UseNpgsql(connString);
+        return;
+    }
+
+    options.UseSqlServer(connString);
+});
 
 builder.Services
     .AddIdentity<AppUser, AstrolPOSAPI.Domain.Entities.Identity.AppRole>(options =>
@@ -199,5 +208,18 @@ app.MapControllers();
 app.MapHealthChecks("/health");
 
 app.Run();
+
+static bool IsPostgresConnectionString(string? connectionString)
+{
+    if (string.IsNullOrWhiteSpace(connectionString))
+    {
+        return false;
+    }
+
+    return connectionString.Contains("Host=", StringComparison.OrdinalIgnoreCase)
+        || connectionString.Contains("Username=", StringComparison.OrdinalIgnoreCase)
+        || connectionString.Contains("User ID=", StringComparison.OrdinalIgnoreCase)
+        || connectionString.Contains("Port=", StringComparison.OrdinalIgnoreCase);
+}
 
 public partial class Program { }
