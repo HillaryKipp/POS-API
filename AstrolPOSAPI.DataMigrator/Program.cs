@@ -10,6 +10,7 @@ using Npgsql;
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var configuration = BuildConfiguration(args);
+var verifyOnly = args.Any(arg => string.Equals(arg, "--verify", StringComparison.OrdinalIgnoreCase));
 
 var sourceConnectionString = configuration["source"]
     ?? configuration["MIGRATION_SOURCE_CONNECTION_STRING"]
@@ -42,6 +43,12 @@ await using var targetDb = new AppDbContext(CreateOptions(targetConnectionString
     DisableAuditTracking = true
 };
 
+if (verifyOnly)
+{
+    await VerifyTargetAsync(targetDb);
+    return;
+}
+
 Console.WriteLine("Ensuring target schema exists...");
 await targetDb.Database.EnsureCreatedAsync();
 
@@ -73,6 +80,24 @@ foreach (var entityType in orderedEntityTypes)
 }
 
 Console.WriteLine($"Migration complete. {totalRows} rows copied.");
+
+static async Task VerifyTargetAsync(AppDbContext targetDb)
+{
+    Console.WriteLine("Verifying target database contents...");
+
+    var entityTypes = GetMigrationOrder(targetDb.Model);
+    foreach (var entityType in entityTypes)
+    {
+        var clrType = entityType.ClrType;
+        if (clrType == null)
+        {
+            continue;
+        }
+
+        var count = await CountEntitiesAsync(targetDb, clrType);
+        Console.WriteLine($"{entityType.GetTableName() ?? clrType.Name}: {count}");
+    }
+}
 
 static IConfigurationRoot BuildConfiguration(string[] args)
 {
@@ -190,6 +215,25 @@ static async Task<List<object>> LoadEntitiesAsync(DbContext dbContext, Type clrT
     var list = await InvokeToListAsync(query, clrType);
 
     return list.Cast<object>().ToList();
+}
+
+static async Task<int> CountEntitiesAsync(DbContext dbContext, Type clrType)
+{
+    var query = BuildQuery(dbContext, clrType);
+    var method = typeof(EntityFrameworkQueryableExtensions).GetMethods(BindingFlags.Public | BindingFlags.Static)
+        .Where(candidate => candidate.Name == nameof(EntityFrameworkQueryableExtensions.CountAsync))
+        .Where(candidate => candidate.IsGenericMethodDefinition)
+        .Single(candidate =>
+        {
+            var parameters = candidate.GetParameters();
+            return parameters.Length == 2 && parameters[1].ParameterType == typeof(CancellationToken);
+        })
+        .MakeGenericMethod(clrType);
+
+    var task = (Task)method.Invoke(null, new object[] { query, CancellationToken.None })!;
+    await task.ConfigureAwait(false);
+
+    return (int)task.GetType().GetProperty("Result")!.GetValue(task)!;
 }
 
 static IQueryable BuildQuery(DbContext dbContext, Type clrType)
