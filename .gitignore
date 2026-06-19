@@ -294,9 +294,10 @@ Thumbs.db
 *.temp
 ~$*
 
+
 # Docker
 .dockerignore
-Dockerfile
+#Dockerfile
 
 # Database
 *.db

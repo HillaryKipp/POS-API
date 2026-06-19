@@ -16,6 +16,8 @@ namespace AstrolPOSAPI.Persistence.Contexts
     {
         private readonly AstrolPOSAPI.Application.Interfaces.Services.ICurrentUserService _currentUserService;
 
+        public bool DisableAuditTracking { get; set; }
+
         public AppDbContext(
             DbContextOptions<AppDbContext> options,
             AstrolPOSAPI.Application.Interfaces.Services.ICurrentUserService currentUserService) : base(options)
@@ -27,6 +29,11 @@ namespace AstrolPOSAPI.Persistence.Contexts
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
+            if (DisableAuditTracking)
+            {
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+
             var userId = _currentUserService.UserId;
             var now = DateTimeOffset.UtcNow;
 
